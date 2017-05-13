@@ -15,7 +15,7 @@
     var canvas = document.getElementById('boids');
     var canvasWidth = canvas.width;
     var canvasHeight = canvas.height;
-    var maxSpeed = canvasWidth / 50;
+    // var maxSpeed = canvasWidth / 50;
     var boids = [];
 
     var xNumbers = [];
@@ -39,7 +39,7 @@
     }
 
     // Run Interval Loop
-    var runBoids = setInterval( loop, 20 );
+    var runBoids = setInterval( loop, 16 );
 
 
   } else {
