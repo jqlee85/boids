@@ -9,12 +9,20 @@ class Boid {
     } else {
       this.containerSize = boid.containerHeight;
     }
+    this.radius = boid.radius;
     this.color = '#a7f9b9';
     this.strokeStyle = 'rgba(167, 249, 185,.5)';
     this.social = .5;
     this.prevSpeed = boid.quickness * ( this.containerSize / 20 );
     this.prevDirection = ( Math.floor(Math.random() * 360) + 1 ) * Math.PI / 180;
     this.direction = ( Math.floor(Math.random() * 360) + 1 ) * Math.PI / 180;
+
+    this.theBoid = new Path.Circle({
+      center: [boid.x , boid.y],
+      radius: this.radius,
+      fillColor: '#a7f9b9'
+    });
+
 
   }
 
@@ -27,13 +35,15 @@ class Boid {
     this.x = x2;
     this.y = y2;
 
-    //Determine next position
-    return {
-      x: x2,
-      y: y2,
-      strokeStyle: this.strokeStyle,
-      fillColor: this.color
-    }
+    // //Determine next position
+    // return {
+    //   x: x2,
+    //   y: y2,
+    //   strokeStyle: this.strokeStyle,
+    //   fillColor: this.color
+    // }
+
+    this.theBoid.position = [x2,y2];
 
   }
 

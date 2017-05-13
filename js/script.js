@@ -10,11 +10,12 @@
     var theEnd = false;
     var numBoids = 50;
     var radius = 3;
+    var quickness = .2;
     var canvasWidth = paper.width;
     var canvas = document.getElementById('boids');
     var canvasWidth = canvas.width;
     var canvasHeight = canvas.height;
-    var maxSpeed = canvasWidth / 20;
+    var maxSpeed = canvasWidth / 50;
     var boids = [];
 
     var xNumbers = [];
@@ -33,12 +34,12 @@
 
     // Instantiate all Boids
     for ( i = 0; i < numBoids; i++ ) {
-      boids.push( new Boid( { x: xNumbers[i], y: yNumbers[i], containerWidth: canvasWidth, containerHeight: canvasHeight, quickness: .2 } ) );
+      boids.push( new Boid( { x: xNumbers[i], y: yNumbers[i], containerWidth: canvasWidth, containerHeight: canvasHeight, quickness: quickness, radius: radius } ) );
 
     }
 
     // Run Interval Loop
-    var runBoids = setInterval( loop, 50 );
+    var runBoids = setInterval( loop, 20 );
 
 
   } else {
@@ -71,11 +72,11 @@
   // Render Boid
   function renderBoid( boid ) {
 
-    var newpath = new Path.Circle({
-      center: [boid.x , boid.y],
-      radius: radius,
-      fillColor: '#a7f9b9'
-    });
+    // var newpath = new Path.Circle({
+    //   center: [boid.x , boid.y],
+    //   radius: radius,
+    //   fillColor: '#a7f9b9'
+    // });
 
   }
 
