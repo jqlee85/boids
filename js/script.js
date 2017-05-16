@@ -35,7 +35,6 @@
     // Instantiate all Boids
     for ( i = 0; i < numBoids; i++ ) {
       boids.push( new Boid( { x: xNumbers[i], y: yNumbers[i], containerWidth: canvasWidth, containerHeight: canvasHeight, quickness: quickness, radius: radius } ) );
-
     }
 
     // Run Interval Loop
@@ -57,7 +56,19 @@
 
         var nextPosition = boids[i].nextPosition();
 
-        renderBoid(nextPosition);
+        if (i == 0) {
+
+          if ( boids[i].distanceFromHorWall() < 0 || boids[i].distanceFromVertWall() < 0 ) {
+            theEnd = true;
+          }
+          console.log( boids[i].distanceFromHorWall() );
+          console.log( boids[i].distanceFromVertWall() );
+
+
+        // renderBoid(nextPosition);
+
+        }
+
       }
 
     } else {

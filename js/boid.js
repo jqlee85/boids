@@ -4,6 +4,8 @@ class Boid {
 
     this.x = boid.x;
     this.y = boid.y;
+    this.containerWidth = boid.containerWidth;
+    this.containerHeight = boid.containerHeight;
     if (boid.containerWidth < boid.containerHeight) {
       this.containerSize = boid.containerWidth;
     } else {
@@ -14,8 +16,10 @@ class Boid {
     this.strokeStyle = 'rgba(167, 249, 185,.5)';
     this.social = .5;
     this.prevSpeed = boid.quickness * ( this.containerSize / 50 );
-    this.prevDirection = ( Math.floor(Math.random() * 360) + 1 ) * Math.PI / 180;
-    this.direction = ( Math.floor(Math.random() * 360) + 1 ) * Math.PI / 180;
+    this.degrees = Math.floor(Math.random() * 360) + 1;
+    // this.degrees = 0;
+    this.prevDirection = this.degrees * Math.PI / 180;
+    this.direction = this.degrees * Math.PI / 180;
 
     this.theBoid = new Path.Circle({
       center: [boid.x , boid.y],
@@ -26,7 +30,7 @@ class Boid {
 
   }
 
-  nextPosition(){
+  nextPosition() {
 
     this.speed = this.prevSpeed;
 
@@ -41,8 +45,43 @@ class Boid {
 
   }
 
-  getDirection(){
+  getDirection() {
 
+  }
+
+  movingRight() {
+    if ( this.degrees < 90 || this.degrees > 270 ) return true;
+    else return false;
+  }
+
+  movingDown() {
+    if ( this.degrees > 0 && this.degrees < 180 ) return true;
+    else return false;
+  }
+
+  changeDirection( collisionObject ) {
+
+  }
+
+  distanceFromHorWall() {
+    if (this.movingRight()) {
+      return this.containerWidth - ( this.x + this.radius )
+    } else {
+      return this.x - this.radius;
+    }
+
+  }
+
+  distanceFromVertWall() {
+    if (this.movingDown()) {
+      return this.containerWidth - ( this.y + this.radius )
+    } else {
+      return this.y - this.radius;
+    }
+  }
+
+  getRadians() {
+    return this.degrees * Math.PI / 180;
   }
 
 
