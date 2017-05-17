@@ -12,8 +12,8 @@ class Boid {
       this.containerSize = boid.containerHeight;
     }
     this.radius = boid.radius;
-    this.color = '#a7f9b9';
-    this.strokeStyle = 'rgba(167, 249, 185,.5)';
+    this.color = '#111111';
+    this.strokeStyle = 'rgba(17, 17, 17,.9)';
     this.social = .5;
     this.prevSpeed = boid.quickness * ( this.containerSize / 50 );
     this.degrees = Math.floor(Math.random() * 360) + 1;
@@ -24,7 +24,7 @@ class Boid {
     this.theBoid = new Path.Circle({
       center: [boid.x , boid.y],
       radius: this.radius,
-      fillColor: '#a7f9b9'
+      fillColor: '#111111'
     });
 
 

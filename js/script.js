@@ -64,9 +64,6 @@
           console.log( boids[i].distanceFromHorWall() );
           console.log( boids[i].distanceFromVertWall() );
 
-
-        // renderBoid(nextPosition);
-
         }
 
       }

@@ -81,14 +81,17 @@ h1 {
 }
 
 #home {
-  background: #222;
+  background: #f1f1f1;
 }
 
 #boids-wrapper {
-  width: 1000px;
-  height: 800px;
-  background: #1a1a1a;
-  border: 1px solid #aaa;
+  width: 1200px;
+  height: 900px;
+  background-color: #efefef;
+  background-image: url('../img/boids-bg-1.jpg');
+  background-size: cover;
+  background-position:bottom center;
+  border: 1px solid #333;
   border-radius: 4px;
   margin: 40px auto;
 }
