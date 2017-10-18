@@ -14,7 +14,8 @@ class Boid {
     this.radius = boid.radius;
     this.color = '#111111';
     this.strokeStyle = 'rgba(17, 17, 17,.9)';
-    this.social = .5;
+    this.cohesion = .5;
+    this.aversion = .5;
     this.prevSpeed = boid.quickness * ( this.containerSize / 50 );
     this.degrees = Math.floor(Math.random() * 360) + 1;
     // this.degrees = 0;
@@ -33,8 +34,6 @@ class Boid {
   nextPosition() {
 
     this.speed = this.prevSpeed;
-
-    // console.log(this.speed);
 
     var x2 = this.x + Math.cos( this.direction ) * this.speed;
     var y2 = this.y + Math.sin( this.direction ) * this.speed;

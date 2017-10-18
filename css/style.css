@@ -72,26 +72,13 @@ table{
 \*------------------------------------*/
 /* GO! */
 
-h1 {
-  color: #eee;
-  font-size: 2em;
-  text-align:center;
-  font-family: arial;
-  margin-top: 20px;
-}
-
 #home {
-  background: #f1f1f1;
+  height: 100vh;
+  width: 100vw;
+  background-color: #21204b;
 }
 
 #boids-wrapper {
-  width: 1200px;
-  height: 900px;
-  background-color: #efefef;
-  background-image: url('../img/boids-bg-1.jpg');
-  background-size: cover;
-  background-position:bottom center;
-  border: 1px solid #333;
-  border-radius: 4px;
-  margin: 40px auto;
+  width: 100vw;
+  height: 100vh;
 }

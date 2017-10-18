@@ -4,18 +4,25 @@
 
   if ( paper ) {
 
+    // Set Size
+    var size = {
+      width: window.innerWidth || document.body.clientWidth,
+      height: window.innerHeight || document.body.clientHeight
+    }
+    var canvasWidth = size.width;
+    var canvasHeight = size.height;
+    var canvas = document.getElementById('boids');
+    canvas.style.width = canvasWidth + 'px';
+    canvas.style.height = canvasHeight + 'px';
+
     // Setup Canvas
     paper.setup('boids');
-
     var theEnd = false;
     var numBoids = 50;
     var radius = 3;
     var quickness = .2;
-    var canvasWidth = paper.width;
-    var canvas = document.getElementById('boids');
-    var canvasWidth = canvas.width;
-    var canvasHeight = canvas.height;
     // var maxSpeed = canvasWidth / 50;
+
     var boids = [];
 
     var xNumbers = [];

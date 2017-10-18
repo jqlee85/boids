@@ -11,10 +11,8 @@
 
 <body id="home">
 
-	<h1>BOIDS</h1>
-
   <div id="boids-wrapper">
-    <canvas id="boids" width="1200px" height="900px"></canvas>
+    <canvas id="boids"></canvas>
   </div>
 
   <script src="js/paperjs/dist/paper-full.js"></script>
