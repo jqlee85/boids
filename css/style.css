@@ -82,3 +82,11 @@ table{
   width: 100vw;
   height: 100vh;
 }
+
+.boid {
+  position: absolute;
+  background: #fff;
+  width: 6px;
+  height: 6px;
+  border-radius: 3px;
+}

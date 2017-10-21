@@ -1,8 +1,6 @@
 (function() {
 
-  paper.install(window);
-
-  if ( paper ) {
+  if ( TweenMax ) {
 
     // Set Size
     var size = {
@@ -16,9 +14,8 @@
     canvas.style.height = canvasHeight + 'px';
 
     // Setup Canvas
-    paper.setup('boids');
     var theEnd = false;
-    var numBoids = 50;
+    var numBoids = 200;
     var radius = 3;
     var quickness = .2;
     // var maxSpeed = canvasWidth / 50;
@@ -41,7 +38,7 @@
 
     // Instantiate all Boids
     for ( i = 0; i < numBoids; i++ ) {
-      boids.push( new Boid( { x: xNumbers[i], y: yNumbers[i], containerWidth: canvasWidth, containerHeight: canvasHeight, quickness: quickness, radius: radius } ) );
+      boids.push( new Boid( { id: i, x: xNumbers[i], y: yNumbers[i], containerWidth: canvasWidth, containerHeight: canvasHeight, quickness: quickness, radius: radius } ) );
     }
 
     // Run Interval Loop

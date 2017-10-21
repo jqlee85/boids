@@ -12,10 +12,11 @@
 <body id="home">
 
   <div id="boids-wrapper">
-    <canvas id="boids"></canvas>
+    <div id="boids"></div>
   </div>
 
-  <script src="js/paperjs/dist/paper-full.js"></script>
+	<!--CDN link for  TweenMax-->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/1.20.2/TweenMax.min.js"></script>
   <script src="js/boid.js"></script>
   <script src="js/script.js"></script>
 </body>

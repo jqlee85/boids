@@ -2,6 +2,7 @@ class Boid {
 
   constructor(boid) {
 
+    this.id = boid.id;
     this.x = boid.x;
     this.y = boid.y;
     this.containerWidth = boid.containerWidth;
@@ -22,12 +23,12 @@ class Boid {
     this.prevDirection = this.degrees * Math.PI / 180;
     this.direction = this.degrees * Math.PI / 180;
 
-    this.theBoid = new Path.Circle({
-      center: [boid.x , boid.y],
-      radius: this.radius,
-      fillColor: '#111111'
-    });
-
+    var theCanvas = document.getElementById('boids');
+    var thisBoid = document.createElement('DIV');
+    thisBoid.className ='boid';
+    thisBoid.id = 'boid'+this.id;
+    theCanvas.appendChild(thisBoid);
+    TweenMax.to("#boid"+this.id, false, { left: this.x, top: this.y} );
 
   }
 
@@ -40,7 +41,8 @@ class Boid {
     this.x = x2;
     this.y = y2;
 
-    this.theBoid.position = [x2,y2];
+    TweenMax.to("#boid"+this.id, false, { left: this.x, top: this.y} );
+    // this.theBoid.position = [x2,y2];
 
   }
 
