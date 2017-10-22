@@ -24,7 +24,7 @@ var colors = [
   '#f4416a'
 ];
 var theEnd = false;
-var numBoids = 50;
+var numBoids = 20;
 var radius = 4;
 var quickness = .3;
 // var maxSpeed = canvasWidth / 50;
@@ -55,46 +55,41 @@ var boids = [];
 // Initialize Boids
 function init() {
 
-  var xNumbers = [];
-  while(xNumbers.length < numBoids){
-    var randomnumber = Math.ceil(Math.random()* ( size.width - ( radius * 2 ) ) ) + ( radius );
-    if(xNumbers.indexOf(randomnumber) > -1) continue;
-    xNumbers[xNumbers.length] = randomnumber;
-  }
-
-  var yNumbers = [];
-  while(yNumbers.length < numBoids){
-    var randomnumber = Math.ceil(Math.random()* ( size.height - ( radius * 2 ) ) ) + ( radius );
-    if(yNumbers.indexOf(randomnumber) > -1) continue;
-    yNumbers[yNumbers.length] = randomnumber;
-  }
-
   // Instantiate all Boids
   for ( i = 0; i < numBoids; i++ ) {
+
+    // Generate random coords
+    var x = Math.ceil(Math.random()* ( size.width - ( radius * 2 ) ) ) + ( radius );
+    var y = Math.ceil(Math.random()* ( size.height - ( radius * 2 ) ) ) + ( radius );
+    // For subsequent boids, check for collisions and generate new coords if exist
+    if ( i !== 0 ) {
+      for (var j = 0; j < boids.length; j++ ) {
+        if ( getDistance(x, y, boids[j].x, boids[j].y) - ( radius + boids[j].radius ) < 0 ) {
+          x = Math.ceil(Math.random()* ( size.width - ( radius * 2 ) ) ) + ( radius );
+          y = Math.ceil(Math.random()* ( size.height - ( radius * 2 ) ) ) + ( radius );
+          j = -1;
+        }
+      }
+    }
+
+
     boids.push( new Boid( {
       id: i,
-      x: xNumbers[i],
-      y: yNumbers[i],
-      containerWidth: size.width,
-      containerHeight: size.height,
+      x: x,
+      y: y,
       quickness: quickness,
       radius: radius,
       color: randomColor(colors),
       cohesion: .5,
       aversion: .5,
-      agility: getRandomInt(20,80) / 100,
-      quickness: getRandomInt(20,80) / 100
+      agility: getRandomInt(60,90) / 100,
+      quickness: getRandomInt(40,60) / 100
     } ) );
   }
 
 }
 
-
-
-
-
-
-
+// Helpers
 
 function getRandomInt(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
