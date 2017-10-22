@@ -45,14 +45,27 @@ class Boid {
         this.color = '#f4416a';
         break;
     }
-    // this.color = '#111111';
+    // Cohesion, Aversion, Agility
     this.cohesion = .5;
     this.aversion = .5;
-    this.prevSpeed = boid.quickness * ( this.containerSize / 50 );
+    this.agility = this.getRandomInt(20,80) / 100;
+
+    // Direction
     this.degrees = Math.floor(Math.random() * 360) + 1;
-    // this.degrees = 0;
     this.prevDirection = this.degrees * Math.PI / 180;
-    this.direction = this.degrees * Math.PI / 180;
+    this.direction = this.getRadians();
+
+    // Accel and Velocity
+    this.quickness = this.getRandomInt(20,50) / 100;
+    this.maxSpeed = 20 * this.quickness;
+    this.prevSpeed = this.quickness * ( this.maxSpeed );
+    this.speed = this.prevSpeed;
+    this.ax = 5;
+    this.ay = 5;
+    this.vx = this.speed * Math.cos(this.direction);
+    this.vy = this.speed * Math.sin(this.direction);
+    this.prevVx = this.vx;
+    this.PrevVy = this.vy;
 
     var theCanvas = document.getElementById('boids');
     var thisBoid = document.createElement('DIV');
@@ -66,24 +79,55 @@ class Boid {
 
   nextPosition() {
 
-    this.speed = this.prevSpeed;
 
-    var x2 = this.x + Math.cos( this.direction ) * this.speed;
-    var y2 = this.y + Math.sin( this.direction ) * this.speed;
+    // If getting close to border, slow down
+    if (this.distanceFromVertWall() < 20) {
+      this.ax = -5;
+    } else {
+      this.ax = 5;
+    }
+    if (this.distanceFromHorWall() < 20) {
+      this.ay = -5;
+    } else {
+      this.ay = 5;
+    }
+
+    this.prevVx = this.vx;
+    this.prevVy = this.vy;
+    this.vx = this.prevVx * ( 1 + (this.ax / 100) );
+    this.vy = this.prevVy * ( 1 + (this.ay / 100) );
+
+    if (this.vx > this.maxSpeed) this.vx = this.maxSpeed;
+    else if (this.vx < 1) this.vx = 1;
+    if (this.vy > this.maxSpeed) this.vy = this.maxSpeed;
+    else if (this.vy < 1) this.vy = 1;
+
+    this.direction = Math.atan2(this.vy,this.vx);
+    this.degrees = this.getDegrees();
+
+    var x2 = this.x + this.vx;
+    var y2 = this.y + this.vy;
     this.x = x2;
     this.y = y2;
 
-    if (this.x < -10) {
-      var movingLeft = this.movingRight() ? 'moving right' : 'moving left';
-      console.log(this.id +' is at '+ this.x + 'and is' + movingLeft);
-      console.log('degrees is '+ this.degrees);
-    }
-
-
     TweenMax.to("#boid"+this.id, false, { left: this.x, top: this.y} );
-    // this.theBoid.position = [x2,y2];
 
+    this.prevSpeed = this.speed;
   }
+
+  // slowDown() {
+  //   this.speed = this.prevSpeed - this.maxSpeed / 10;
+  //   if (this.speed < 1) {
+  //     this.speed = 1;
+  //   }
+  // }
+  //
+  // speedUp() {
+  //   this.speed = this.prevSpeed + this.maxSpeed / 10;
+  //   if (this.speed > this.maxSpeed) {
+  //     this.speed = this.maxSpeed;
+  //   }
+  // }
 
   getDirection() {
 
@@ -103,25 +147,48 @@ class Boid {
     // console.log(this.id);
     // console.log('x: '+this.x);
     // console.log('y: '+this.y);
+
+
+
+
+
+
+  }
+
+  curve(degrees) {
+    var newDeg = degrees * this.agility;
+    this.degrees += newDeg;
+    this.direction = this.getRadians();
+    this.vx = this.speed * Math.cos(this.direction);
+    this.vy = this.speed * Math.sin(this.direction);
+
+  }
+
+  // Check for boid collisions and change course
+  avoidTheBoids() {
+
+  }
+
+  // Move towards boids if far away
+  approachBoids() {
+
+  }
+
+  // Detect a wall hit and bounce
+  wallBounce() {
     if ( this.distanceFromHorWall() < 1  ) {
-      // console.log('horizontal wall hit');
       if ( this.movingDown() ) {
-        // console.log('was down');
         this.y = document.body.clientHeight -2;
       } else {
-        // console.log('was up');
         this.y = 2;
       }
       this.degrees = (360 - this.degrees) % 360;
       this.direction = this.getRadians();
     }
     if ( this.distanceFromVertWall() < 1  ) {
-      // console.log('vertical wall hit');
       if ( this.movingRight() ) {
-        // console.log('was right');
         this.x = document.body.clientWidth - 2;
       } else {
-        // console.log('was left');
         this.x = 2;
       }
       this.degrees = (180 - this.degrees);
@@ -149,6 +216,14 @@ class Boid {
 
   getRadians() {
     return this.degrees * Math.PI / 180;
+  }
+
+  getDegrees() {
+    return this.direction / (Math.PI / 180);
+  }
+
+  getRandomInt(min, max) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
   }
 
 

@@ -15,7 +15,7 @@
     var theEnd = false;
     var numBoids = 20;
     var radius = 3;
-    var quickness = .5;
+    var quickness = .3;
     // var maxSpeed = canvasWidth / 50;
 
     var boids = [];
@@ -59,9 +59,23 @@
 
         var nextPosition = boids[i].nextPosition();
 
-        if ( boids[i].distanceFromHorWall() < 1 || boids[i].distanceFromVertWall() < 1  ) {
-          boids[i].changeDirection();
+        // Wall Check
+        var distanceFromHorWall = boids[i].distanceFromHorWall();
+        var distanceFromVertWall = boids[i].distanceFromVertWall();
+
+        // Check for borders
+        if ( distanceFromHorWall < 1 || distanceFromVertWall < 1  ) {
+          boids[i].wallBounce();
+        } else {
+
+
+          boids[i].curve(getRandomInt(-10,10));
         }
+
+        // Boid avoidance
+        boids[i].avoidTheBoids();
+
+
         // console.log( boids[i].distanceFromHorWall() );
         // console.log( boids[i].distanceFromVertWall() );
 
@@ -87,5 +101,10 @@
 
   }
 
+  function getRandomInt(min, max) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+  }
+
+  console.log(getRandomInt(-10,10));
 
 })();
