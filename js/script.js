@@ -23,10 +23,13 @@ var colors = [
   '#f9f9f9',
   '#f4416a'
 ];
-var theEnd = false;
 var numBoids = 100;
 var radius = 50;
-var quickness = .1;
+var quickness = .5;
+var agility = .5;
+var cohesion = .5;
+var introversion = .5;
+var racism = .5;
 // var maxSpeed = canvasWidth / 50;
 
 // Mouse
@@ -77,13 +80,13 @@ function init() {
       id: i,
       x: x,
       y: y,
-      quickness: quickness,
       radius: radius,
+      agility: agility,
+      quickness: quickness,
       color: randomColor(colors),
-      cohesion: .5,
-      aversion: .5,
-      agility: getRandomInt(60,90) / 100,
-      quickness: getRandomInt(40,60) / 100
+      cohesion: cohesion,
+      racism: racism,
+      introversion: introversion
     } ) );
   }
 

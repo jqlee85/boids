@@ -12,9 +12,8 @@ class Boid {
     this.agility = boid.agility * this.getRandomInt(20,80) / 100;
     this.quickness = boid.quickness * this.getRandomInt(50,100) / 100;
     this.racism = boid.racism * this.getRandomInt(20,80) / 100;
-
     this.color = boid.color;
-    this.mass = 1;
+    this.mass = 4/3 * Math.PI * Math.pow(this.radius,3);
 
     // Direction
     this.prevRadians = Math.PI * this.getRandomInt(-99,100) / 100;
