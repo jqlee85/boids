@@ -24,9 +24,9 @@ var colors = [
   '#f4416a'
 ];
 var theEnd = false;
-var numBoids = 20;
-var radius = 4;
-var quickness = .3;
+var numBoids = 100;
+var radius = 50;
+var quickness = .1;
 // var maxSpeed = canvasWidth / 50;
 
 // Mouse

@@ -6,11 +6,13 @@ class Boid {
     this.id = boid.id;
     this.x = boid.x;
     this.y = boid.y;
-    this.radius = boid.radius;
-    this.cohesion = boid.cohesion;
-    this.aversion = boid.aversion;
-    this.agility = boid.agility;
-    this.quickness = boid.quickness;
+    this.radius = boid.radius * this.getRandomInt(50,100) / 100;
+    this.cohesion = boid.cohesion * this.getRandomInt(20,80) / 100;
+    this.introversion = boid.introversion * this.getRandomInt(20,80) / 100;
+    this.agility = boid.agility * this.getRandomInt(20,80) / 100;
+    this.quickness = boid.quickness * this.getRandomInt(50,100) / 100;
+    this.racism = boid.racism * this.getRandomInt(20,80) / 100;
+
     this.color = boid.color;
     this.mass = 1;
 
@@ -19,7 +21,7 @@ class Boid {
     this.radians = this.prevRadians;
 
     // Accel and Velocity
-    this.maxSpeed = 20 * this.quickness;
+    this.maxSpeed = 15 * this.quickness;
     this.prevSpeed = this.maxSpeed * .5;
     this.speed = this.prevSpeed;
     this.velocity = {
@@ -100,6 +102,7 @@ class Boid {
     // console.log('D: '+this.getDegrees(this.radians));
     // console.log('R: '+this.radians);
     // console.log('A: '+this.ax+', '+this.ay);
+    this.curve();
   }
 
   getDirection() {
@@ -129,10 +132,8 @@ class Boid {
 
   curve() {
 
-    // this.radians ;
-    // this.velocity.x = this.speed * Math.cos(this.radians);
-    // this.velocity.y = this.speed * Math.sin(this.radians);
-
+    this.radians = this.radians - this.getRandomInt(-3,3) / 100 * Math.PI;
+    this.setVelocities();
   }
 
   // Check for boid collisions and change course
@@ -151,13 +152,11 @@ class Boid {
       if ( this.movingDown() ) {
         this.y = document.body.clientHeight - this.radius;
         this.radians = -this.radians;
-        this.velocity.x = this.speed * Math.cos(this.radians);
-        this.velocity.y = this.speed * Math.sin(this.radians);
+        this.setVelocities();
       } else {
         this.y = this.radius;
         this.radians = -this.radians;
-        this.velocity.x = this.speed * Math.cos(this.radians);
-        this.velocity.y = this.speed * Math.sin(this.radians);
+        this.setVelocities();
       }
 
     }
@@ -165,13 +164,11 @@ class Boid {
       if ( this.movingRight() ) {
         this.x = document.body.clientWidth - this.radius;
         this.radians = - Math.PI - this.radians;
-        this.velocity.x = this.speed * Math.cos(this.radians);
-        this.velocity.y = this.speed * Math.sin(this.radians);
+        this.setVelocities();
       } else {
         this.x = this.radius;
         this.radians = - Math.PI - this.radians;
-        this.velocity.x = this.speed * Math.cos(this.radians);
-        this.velocity.y = this.speed * Math.sin(this.radians);
+        this.setVelocities();
       }
 
     }
@@ -192,6 +189,11 @@ class Boid {
     } else {
       return this.y;
     }
+  }
+
+  setVelocities() {
+    this.velocity.x = this.speed * Math.cos(this.radians);
+    this.velocity.y = this.speed * Math.sin(this.radians);
   }
 
   getDegrees(radians) {
@@ -233,9 +235,10 @@ class Boid {
 
     // Collision Detection
     for (var i = 0; i < boids.length; i++) {
-      if ( this === boids[i] ) continue;
+      if ( this === boids[i] && this.radius !== boids[i].radius ) continue;
       if ( getDistance( this.x, this.y, boids[i].x, boids[i].y) - ( this.radius + boids[i].radius ) < 0 ) {
         console.log('collision');
+        console.log(this.radius +'+'+ boids[i].radius);
         this.resolveCollision( this, boids[i]);
           // this.velocity.x = 0;
         // this.velocity.y = 0;

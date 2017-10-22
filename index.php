@@ -13,7 +13,24 @@
 
   <div id="boids-wrapper">
     <canvas id="boids"></canvas>
-  </div>
+		<div id="boids-controls-container">
+			<div class="boids-control">
+				<p>Coherence<p>
+			</div>
+			<div class="boids-control">
+				<p>Avoidance<p>
+			</div>
+			<div class="boids-control">
+				<p>Speed<p>
+			</div>
+			<div class="boids-control">
+				<p>Agility<p>
+			</div>
+			<div class="boids-control">
+				<p>Racism<p>
+			</div>
+		</div>
+	</div>
 
 	<!--CDN link for  TweenMax-->
 	<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/1.20.2/TweenMax.min.js"></script> -->

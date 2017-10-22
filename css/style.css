@@ -89,10 +89,11 @@ table{
   width: 100vw;
   max-width: 100vw;
   overflow: hidden;
+  position: relative;
 }
 
 #boids {
-  position: relative;
+  position: absolute;
   height: 100%;
   height: 100vh;
   max-height: 100vh;
@@ -101,10 +102,27 @@ table{
   max-width: 100vw;
 }
 
-.boid {
+#boids-controls-container {
   position: absolute;
-  background: #fff;
-  width: 8px;
-  height: 8px;
-  border-radius: 4px;
+  bottom: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: auto;
+}
+
+.boids-control {
+  padding: 20px;
+  background: rgba(34,34,34,.7);
+  color: #fff;
+  font-family: arial;
+  text-transform: uppercase;
+  border: 2px solid #fff;
+  width: auto;
+  height: auto;
+  margin: 30px 15px;
+  flex-wrap: 1;
+
 }
