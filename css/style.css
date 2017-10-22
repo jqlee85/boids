@@ -73,14 +73,32 @@ table{
 /* GO! */
 
 #home {
+  height: 100%;
   height: 100vh;
+  width: 100%;
   width: 100vw;
-  background-color: #21204b;
+  overflow: hidden;
+  background-color: #222;
 }
 
 #boids-wrapper {
-  width: 100vw;
+  height: 100%;
   height: 100vh;
+  max-height: 100vh;
+  width: 100%;
+  width: 100vw;
+  max-width: 100vw;
+  overflow: hidden;
+}
+
+#boids {
+  position: relative;
+  height: 100%;
+  height: 100vh;
+  max-height: 100vh;
+  width: 100%;
+  width: 100vw;
+  max-width: 100vw;
 }
 
 .boid {

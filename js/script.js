@@ -10,14 +10,12 @@
     var canvasWidth = size.width;
     var canvasHeight = size.height;
     var canvas = document.getElementById('boids');
-    canvas.style.width = canvasWidth + 'px';
-    canvas.style.height = canvasHeight + 'px';
 
     // Setup Canvas
     var theEnd = false;
-    var numBoids = 200;
+    var numBoids = 20;
     var radius = 3;
-    var quickness = .2;
+    var quickness = .5;
     // var maxSpeed = canvasWidth / 50;
 
     var boids = [];
@@ -50,28 +48,25 @@
     alert('JavaScript Canvas is not supported in your browser. Please update your browser or try another.');
   }
 
+
   // Loop Function
   function loop() {
-
+    var timer = 0;
     if ( ! theEnd ) {
-
+      timer++;
       // Loop through all boids
       for ( i = 0; i < boids.length; i++) {
 
         var nextPosition = boids[i].nextPosition();
 
-        if (i == 0) {
-
-          if ( boids[i].distanceFromHorWall() < 0 || boids[i].distanceFromVertWall() < 0 ) {
-            theEnd = true;
-          }
-          console.log( boids[i].distanceFromHorWall() );
-          console.log( boids[i].distanceFromVertWall() );
-
+        if ( boids[i].distanceFromHorWall() < 1 || boids[i].distanceFromVertWall() < 1  ) {
+          boids[i].changeDirection();
         }
+        // console.log( boids[i].distanceFromHorWall() );
+        // console.log( boids[i].distanceFromVertWall() );
 
       }
-
+      if (timer > 500) theEnd = true;
     } else {
 
       clearInterval( runBoids );
