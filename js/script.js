@@ -23,7 +23,7 @@ var colors = [
   '#f9f9f9',
   '#f4416a'
 ];
-var numBoids = 100;
+var numBoids = 50;
 var radius = 5;
 var quickness = .5;
 var agility = .5;
@@ -93,7 +93,6 @@ function init() {
 }
 
 // Helpers
-
 function getRandomInt(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }

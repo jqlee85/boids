@@ -19,7 +19,7 @@ class Boid {
     this.prevRadians = Math.PI * this.getRandomInt(-99,100) / 100;
     this.radians = this.prevRadians;
 
-    // Accel and Velocity
+    // Speed & Velocity
     this.maxSpeed = 15 * this.quickness;
     this.prevSpeed = this.maxSpeed * .5;
     this.speed = this.prevSpeed;
@@ -27,33 +27,22 @@ class Boid {
       x: this.speed * Math.cos( this.radians ),
       y: this.speed * Math.sin( this.radians )
     }
-    this.prevVx = this.velocity.x;
-    this.PrevVy = this.velocity.y;
-    this.a = 5;
-    this.ax = Math.cos(this.radians) / this.a;
-    this.ay = Math.sin(this.radians) / this.a;
+    this.desiredVelocity = {
+      x: this.velocity.x,
+      y: this.velocity.y
+    }
+
+    //Force and Accel
+    this.maxForce = null;
+    this.maxAcceleration = 5;
+    this.acceleration = {
+      x: Math.cos(this.radians) / this.maxAcceleration,
+      y: Math.sin(this.radians) / this.maxAcceleration
+    }
 
   }
 
   nextPosition() {
-
-    // If getting close to border, slow down
-    // if (this.distanceFromVertWall() < 20) {
-    //   this.ax = - Math.cos(this.radians) * 5;
-    // } else {
-    //   this.ax = Math.cos(this.radians) * 5;
-    // }
-    // if (this.distanceFromHorWall() < 20) {
-    //   this.ay = - Math.sin(this.radians) * 5;
-    // } else {
-    //   this.ay = Math.sin(this.radians) * 5;
-    // }
-
-
-    // this.prevVx = this.velocity.x;
-    // this.prevVy = this.velocity.y;
-    // this.velocity.x = this.prevVx * ( 100 + this.ax ) / 100;
-    // this.velocity.y = this.prevVy * ( 100 + this.ay ) / 100;
 
     // New X-Velocity
     if ( Math.abs(this.velocity.x) > Math.abs( Math.cos(this.radians) * this.maxSpeed ) ) {
@@ -83,7 +72,6 @@ class Boid {
       this.velocity.y = 0;
     }
 
-
     // Angle
     this.radians = Math.atan2(this.velocity.y,this.velocity.x);
     this.degrees = this.radians * 180/Math.PI;
@@ -92,16 +80,13 @@ class Boid {
     this.x = this.x + this.velocity.x;
     this.y = this.y + this.velocity.y;
 
-    // Set Previous
-    this.prevSpeed = this.speed;
-
     // console.log('P: '+this.x+', '+this.y);
     // console.log('S: '+this.speed);
     // console.log('V: '+this.velocity.x +', '+this.velocity.y);
     // console.log('D: '+this.getDegrees(this.radians));
     // console.log('R: '+this.radians);
     // console.log('A: '+this.ax+', '+this.ay);
-    this.curve();
+    this.wobble();
   }
 
   getDirection() {
@@ -129,8 +114,7 @@ class Boid {
 
   }
 
-  curve() {
-
+  wobble() {
     this.radians = this.radians - this.getRandomInt(-3,3) / 100 * Math.PI;
     this.setVelocities();
   }
