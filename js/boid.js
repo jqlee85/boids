@@ -4,8 +4,7 @@ class Boid {
 
     // Initial Properties
     this.id = boid.id;
-    this.x = boid.x;
-    this.y = boid.y;
+    this.location = new Victor( boid.x, boid.y );
     this.radius = boid.radius * this.getRandomInt(50,100) / 100;
     this.cohesion = boid.cohesion * this.getRandomInt(20,80) / 100;
     this.introversion = boid.introversion * this.getRandomInt(20,80) / 100;
@@ -23,78 +22,46 @@ class Boid {
     this.maxSpeed = 15 * this.quickness;
     this.prevSpeed = this.maxSpeed * .5;
     this.speed = this.prevSpeed;
-    this.velocity = {
-      x: this.speed * Math.cos( this.radians ),
-      y: this.speed * Math.sin( this.radians )
-    }
-    this.desiredVelocity = {
-      x: this.velocity.x,
-      y: this.velocity.y
-    }
-
+    this.velocity = new Victor( this.speed * Math.cos( this.radians ), this.speed * Math.sin( this.radians ) );
     //Force and Accel
-    this.maxForce = null;
-    this.maxAcceleration = 5;
-    this.acceleration = {
-      x: Math.cos(this.radians) / this.maxAcceleration,
-      y: Math.sin(this.radians) / this.maxAcceleration
-    }
+    this.maxForce = 1;
+    this.acceleration = new Victor(0, 0);
 
+
+  }
+
+  seek( target ) {
+    console.log('seeking '+ target.location.x+','+target.location.y);
+    var desired = target.location.subtract(this.location);
+    desired.normalize();
+    desired.multiply(new Victor(this.maxSpeed));
+    var steerForce = desired.subtract(this.velocity).normalize().multiply(new Victor(this.maxForce*this.agility,this.maxForce*this.agility));
+    this.applyForce(steerForce);
+  }
+
+  applyForce( force ){
+    this.velocity.add(force);
   }
 
   nextPosition() {
 
-    // New X-Velocity
-    if ( Math.abs(this.velocity.x) > Math.abs( Math.cos(this.radians) * this.maxSpeed ) ) {
-      // this.ax = 0;
-      if (this.velocity.x < 0) {
-        this.velocity.x = 0 - Math.cos(this.radians) * this.maxSpeed;
-      }
-      else {
-        this.velocity.x = Math.cos(this.radians) * this.maxSpeed;
-      }
-    } else if ( Math.abs(this.velocity.x) < this.velocity.x ) {
-      console.log()
-      // this.ax = 0;
-      this.velocity.x = 0;
+    var point = {
+      location: new Victor(size.width/2,size.height/2)
     }
-    // New Y-Velocity
-    if ( Math.abs(this.velocity.y) > Math.abs( Math.sin(this.radians) * this.maxSpeed ) ) {
-      // this.ay = 0;
-      if (this.velocity.y < 0) {
-        this.velocity.y = 0 - Math.sin(this.radians) * this.maxSpeed;
-      }
-      else {
-        this.velocity.y = Math.sin(this.radians) * this.maxSpeed;
-      }
-    } else if ( Math.abs(this.velocity.y) < this.velocity.y ) {
-      // this.ay = 0;
-      this.velocity.y = 0;
-    }
+    // this.seek(point);
+    this.velocity = this.velocity.add(this.acceleration);
+    // this.wobble();
+    this.location = this.location.add(this.velocity);
 
     // Angle
     this.radians = Math.atan2(this.velocity.y,this.velocity.x);
     this.degrees = this.radians * 180/Math.PI;
 
-    // New Position
-    this.x = this.x + this.velocity.x;
-    this.y = this.y + this.velocity.y;
-
-    // console.log('P: '+this.x+', '+this.y);
-    // console.log('S: '+this.speed);
-    // console.log('V: '+this.velocity.x +', '+this.velocity.y);
-    // console.log('D: '+this.getDegrees(this.radians));
-    // console.log('R: '+this.radians);
-    // console.log('A: '+this.ax+', '+this.ay);
-    this.wobble();
   }
 
-  getDirection() {
-
-  }
 
   movingRight() {
-    if ( ( this.radians > 0 && this.radians < .5 * Math.PI ) || ( this.radians < 0 && this.radians > -.5 * Math.PI ) ) {
+    if ( this.velocity.x > 0 ) {
       return true;
     } else {
       return false;
@@ -102,20 +69,15 @@ class Boid {
   }
 
   movingDown() {
-    if ( this.radians > 0 ) {
+    if ( this.velocity.y > 0 ) {
       return true;
     } else {
       return false;
     }
   }
 
-  changeDirection() {
-
-
-  }
-
   wobble() {
-    this.radians = this.radians - this.getRandomInt(-3,3) / 100 * Math.PI;
+    this.radians = this.radians - this.getRandomInt(-1,1) / 100 * Math.PI;
     this.setVelocities();
   }
 
@@ -127,56 +89,37 @@ class Boid {
   // Move towards boids if far away
   approachBoids() {
 
+
+
   }
 
   // Detect a wall hit and bounce
   wallBounce() {
     if ( this.distanceFromHorWall() < this.radius  ) {
-      if ( this.movingDown() ) {
-        this.y = document.body.clientHeight - this.radius;
-        this.radians = -this.radians;
-        this.setVelocities();
-      } else {
-        this.y = this.radius;
-        this.radians = -this.radians;
-        this.setVelocities();
-      }
+      this.velocity.invertY();
 
     }
     if ( this.distanceFromVertWall() < this.radius  ) {
-      if ( this.movingRight() ) {
-        this.x = document.body.clientWidth - this.radius;
-        this.radians = - Math.PI - this.radians;
-        this.setVelocities();
-      } else {
-        this.x = this.radius;
-        this.radians = - Math.PI - this.radians;
-        this.setVelocities();
-      }
+      this.velocity.invertX();
 
     }
   }
 
   distanceFromVertWall() {
     if (this.movingRight()) {
-      return document.body.clientWidth - ( this.x );
+      return document.body.clientWidth - ( this.location.x );
     } else {
-      return this.x;
+      return this.location.x;
     }
 
   }
 
   distanceFromHorWall() {
     if (this.movingDown()) {
-      return document.body.clientHeight - ( this.y );
+      return document.body.clientHeight - ( this.location.y );
     } else {
-      return this.y;
+      return this.location.y;
     }
-  }
-
-  setVelocities() {
-    this.velocity.x = this.speed * Math.cos(this.radians);
-    this.velocity.y = this.speed * Math.sin(this.radians);
   }
 
   getDegrees(radians) {
@@ -194,7 +137,7 @@ class Boid {
 
   draw(){
     c.beginPath();
-    c.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);
+    c.arc(this.location.x, this.location.y, this.radius, 0, Math.PI * 2, false);
     c.fillStyle = this.color;
     c.fill();
     c.closePath();
@@ -204,22 +147,12 @@ class Boid {
 
     this.nextPosition();
 
-    // Wall Check
-    var distanceFromHorWall = this.distanceFromHorWall();
-    var distanceFromVertWall =this.distanceFromVertWall();
-
-    // Check for borders
-    if ( distanceFromHorWall < this.radius || distanceFromVertWall < this.radius  ) {
-      this.wallBounce();
-    } else {
-
-      // this.curve(this.getRandomInt(-10,10));
-    }
+    this.wallBounce()
 
     // Collision Detection
     for (var i = 0; i < boids.length; i++) {
       if ( this === boids[i] && this.radius != boids[i].radius ) continue;
-      if ( getDistance( this.x, this.y, boids[i].x, boids[i].y) - ( this.radius + boids[i].radius ) < 0 ) {
+      if ( getDistance( this.location.x, this.location.y, boids[i].location.x, boids[i].location.y) - ( this.radius + boids[i].radius ) < 0 ) {
         console.log('collision');
         console.log(this.radius +'+'+ boids[i].radius);
         this.resolveCollision( this, boids[i]);
@@ -267,14 +200,14 @@ class Boid {
     var xVelocityDiff = particle.velocity.x - otherParticle.velocity.x;
     var yVelocityDiff = particle.velocity.y - otherParticle.velocity.y;
 
-    var xDist = otherParticle.x - particle.x;
-    var yDist = otherParticle.y - particle.y;
+    var xDist = otherParticle.location.x - particle.location.x;
+    var yDist = otherParticle.location.y - particle.location.y;
 
     // Prevent accidental overlap of particles
     if ( xVelocityDiff * xDist + yVelocityDiff * yDist >= 0 ) {
 
       // Grab angle between the two colliding particles
-      var angle = -Math.atan2(otherParticle.y - particle.y, otherParticle.x - particle.x);
+      var angle = -Math.atan2(otherParticle.location.y - particle.location.y, otherParticle.location.x - particle.location.x);
 
       // Store mass in var for better readability in collision equation
       var m1 = particle.mass;

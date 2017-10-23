@@ -23,10 +23,10 @@ var colors = [
   '#f9f9f9',
   '#f4416a'
 ];
-var numBoids = 50;
+var numBoids = 20;
 var radius = 5;
 var quickness = .5;
-var agility = .5;
+var agility = 1;
 var cohesion = .5;
 var introversion = .5;
 var racism = .5;
@@ -34,14 +34,13 @@ var racism = .5;
 
 // Mouse
 var mouse = {
-   x: innerWidth / 2,
-   y: innerHeight / 2
+  location: new Victor( innerWidth / 2, innerHeight / 2 )
 };
 
 // Event Listeners
 addEventListener('mousemove', function(event){
-	mouse.x = event.clientX;
-	mouse.y = event.clientY;
+	mouse.location.x = event.clientX;
+	mouse.location.y = event.clientY;
 });
 
 addEventListener('resize', function(){
