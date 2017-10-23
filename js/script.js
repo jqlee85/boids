@@ -111,14 +111,44 @@ function randomColor(colors) {
 // Animation Loop
 function animate() {
 	requestAnimationFrame(animate);
-	c.clearRect(0, 0, canvas.width, canvas.height);
 
-  // UPdate all boids
-  for (var i = 0; i < boids.length; i++ ) {
-    boids[i].update();
+  // Calc elapsed time since last loop
+  now = Date.now();
+  elapsed = now - then;
+
+  // If enough time has elapsed, draw the next frame
+  if (elapsed > fpsInterval) {
+
+      // Get ready for next frame by setting then=now, but also adjust for your
+      // specified fpsInterval not being a multiple of RAF's interval (16.7ms)
+      then = now - (elapsed % fpsInterval);
+
+      // Drawing Code
+      c.clearRect(0, 0, canvas.width, canvas.height);
+
+      // Update all boids
+      for (var i = 0; i < boids.length; i++ ) {
+        boids[i].update();
+      }
+
   }
 
 }
 
+var stop = false;
+var frameCount = 0;
+var fps, fpsInterval, startTime, now, then, elapsed;
+
+// Start animation with specified framerate
+function startAnimating() {
+  if(fps == null) { var fps = 60; }
+  fpsInterval = 1000 / fps;
+  then = Date.now();
+  startTime = then;
+  animate();
+}
+
+
+
 init();
-animate();
+startAnimating(60);

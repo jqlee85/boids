@@ -234,7 +234,7 @@ class Boid {
 
     // Collision Detection
     for (var i = 0; i < boids.length; i++) {
-      if ( this === boids[i] && this.radius !== boids[i].radius ) continue;
+      if ( this === boids[i] && this.radius != boids[i].radius ) continue;
       if ( getDistance( this.x, this.y, boids[i].x, boids[i].y) - ( this.radius + boids[i].radius ) < 0 ) {
         console.log('collision');
         console.log(this.radius +'+'+ boids[i].radius);
