@@ -32,6 +32,7 @@
 		</div>
 	</div>
 
+	<script src="js/victor.min.js"></script>
   <script src="js/boid.js"></script>
   <script src="js/script.js"></script>
 </body>
