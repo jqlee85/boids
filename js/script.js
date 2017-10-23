@@ -24,7 +24,7 @@ var colors = [
   '#f4416a'
 ];
 var numBoids = 100;
-var radius = 50;
+var radius = 5;
 var quickness = .5;
 var agility = .5;
 var cohesion = .5;

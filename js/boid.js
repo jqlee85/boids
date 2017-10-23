@@ -13,7 +13,7 @@ class Boid {
     this.quickness = boid.quickness * this.getRandomInt(50,100) / 100;
     this.racism = boid.racism * this.getRandomInt(20,80) / 100;
     this.color = boid.color;
-    this.mass = 4/3 * Math.PI * Math.pow(this.radius,3);
+    this.mass = (4/3) * Math.PI * Math.pow( this.radius,3 );
 
     // Direction
     this.prevRadians = Math.PI * this.getRandomInt(-99,100) / 100;
@@ -24,8 +24,8 @@ class Boid {
     this.prevSpeed = this.maxSpeed * .5;
     this.speed = this.prevSpeed;
     this.velocity = {
-      x: this.speed * Math.cos(this.radians),
-      y: this.speed * Math.sin(this.radians)
+      x: this.speed * Math.cos( this.radians ),
+      y: this.speed * Math.sin( this.radians )
     }
     this.prevVx = this.velocity.x;
     this.PrevVy = this.velocity.y;
@@ -280,14 +280,14 @@ class Boid {
  * @return Null | Does not return a value
  */
  resolveCollision(particle, otherParticle) {
-  var xVelocityDiff = particle.velocity.x - otherParticle.velocity.x;
-  var yVelocityDiff = particle.velocity.y - otherParticle.velocity.y;
+    var xVelocityDiff = particle.velocity.x - otherParticle.velocity.x;
+    var yVelocityDiff = particle.velocity.y - otherParticle.velocity.y;
 
-  var xDist = otherParticle.x - particle.x;
-  var yDist = otherParticle.y - particle.y;
+    var xDist = otherParticle.x - particle.x;
+    var yDist = otherParticle.y - particle.y;
 
     // Prevent accidental overlap of particles
-    if (xVelocityDiff * xDist + yVelocityDiff * yDist >= 0) {
+    if ( xVelocityDiff * xDist + yVelocityDiff * yDist >= 0 ) {
 
       // Grab angle between the two colliding particles
       var angle = -Math.atan2(otherParticle.y - particle.y, otherParticle.x - particle.x);
@@ -315,6 +315,7 @@ class Boid {
       otherParticle.velocity.x = vFinal2.x;
       otherParticle.velocity.y = vFinal2.y;
     }
+
   }
 
 }
