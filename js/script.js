@@ -23,7 +23,7 @@ var colors = [
   '#f9f9f9',
   '#f4416a'
 ];
-var numBoids = 20;
+var numBoids = 40;
 var radius = 5;
 var quickness = .5;
 var agility = 1;

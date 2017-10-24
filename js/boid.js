@@ -5,7 +5,8 @@ class Boid {
     // Initial Properties
     this.id = boid.id;
     this.location = new Victor( boid.x, boid.y );
-    this.radius = boid.radius * this.getRandomInt(50,100) / 100;
+    var radiusCoefficients = [.6,.7,.8,.9,1];
+    this.radius = boid.radius * radiusCoefficients[ Math.floor(Math.random() * radiusCoefficients.length) ];
     this.cohesion = boid.cohesion * this.getRandomInt(20,80) / 100;
     this.introversion = boid.introversion * this.getRandomInt(20,80) / 100;
     this.agility = boid.agility * this.getRandomInt(20,80) / 100;
@@ -19,12 +20,12 @@ class Boid {
     this.radians = this.prevRadians;
 
     // Speed & Velocity
-    this.maxSpeed = 15 * this.quickness;
+    this.maxSpeed = 10 * this.quickness;
     this.prevSpeed = this.maxSpeed * .5;
     this.speed = this.prevSpeed;
     this.velocity = new Victor( this.speed * Math.cos( this.radians ), this.speed * Math.sin( this.radians ) );
     //Force and Accel
-    this.maxForce = 1;
+    this.maxForce = 2;
     this.acceleration = new Victor(0, 0);
 
 
@@ -32,15 +33,14 @@ class Boid {
 
   seek( target ) {
     console.log('seeking '+ target.location.x+','+target.location.y);
-    var desired = target.location.subtract(this.location);
-    desired.normalize();
-    desired.multiply(new Victor(this.maxSpeed));
-    var steerForce = desired.subtract(this.velocity).normalize().multiply(new Victor(this.maxForce*this.agility,this.maxForce*this.agility));
-    this.applyForce(steerForce);
+    var desired = this.limitVector( target.location.subtract(this.location), this.maxSpeed);
+    var steerForce =  this.limitVector( desired.subtract(this.velocity), this.maxForce );
+    return steerForce;
   }
 
   applyForce( force ){
     this.velocity.add(force);
+    this.velocity = this.limitVector( this.velocity, this.maxSpeed );
   }
 
   nextPosition() {
@@ -48,13 +48,16 @@ class Boid {
     var point = {
       location: new Victor(size.width/2,size.height/2)
     }
-    // this.seek(point);
-    this.velocity = this.velocity.add(this.acceleration);
-    // this.wobble();
+
+    // Apply Seek Force
+    this.applyForce( this.seek(point) );
+
+
+    this.wobble();
     this.location = this.location.add(this.velocity);
 
     // Angle
-    this.radians = Math.atan2(this.velocity.y,this.velocity.x);
+    this.radians = - this.velocity.angle();
     this.degrees = this.radians * 180/Math.PI;
 
   }
@@ -78,7 +81,7 @@ class Boid {
 
   wobble() {
     this.radians = this.radians - this.getRandomInt(-1,1) / 100 * Math.PI;
-    this.setVelocities();
+
   }
 
   // Check for boid collisions and change course
@@ -91,6 +94,15 @@ class Boid {
 
 
 
+  }
+
+  // Limit a vector to a max magnitude
+  limitVector( vector, max ) {
+    var newVector = vector;
+    newVector.normalize();
+    newVector.x = newVector.x * max;
+    newVector.y = newVector.y * max;
+    return newVector;
   }
 
   // Detect a wall hit and bounce
@@ -149,24 +161,23 @@ class Boid {
 
     this.wallBounce()
 
-    // Collision Detection
+    this.detectCollision();
+
+    this.draw();
+
+  }
+
+  // Collision Detection
+  detectCollision(){
+
     for (var i = 0; i < boids.length; i++) {
-      if ( this === boids[i] && this.radius != boids[i].radius ) continue;
+      if ( this === boids[i] && this.radius == boids[i].radius ) { continue; }
       if ( getDistance( this.location.x, this.location.y, boids[i].location.x, boids[i].location.y) - ( this.radius + boids[i].radius ) < 0 ) {
         console.log('collision');
         console.log(this.radius +'+'+ boids[i].radius);
         this.resolveCollision( this, boids[i]);
-          // this.velocity.x = 0;
-        // this.velocity.y = 0;
-        // boids[i].vx = 0;
-        // boids[i].vy = 0;
       }
     }
-
-    // Boid avoidance
-    // this.avoidTheBoids();
-
-    this.draw();
   }
 
   /**
@@ -228,9 +239,11 @@ class Boid {
       // Swap particle velocities for realistic bounce effect
       particle.velocity.x = vFinal1.x;
       particle.velocity.y = vFinal1.y;
+      particle.velocity = this.limitVector( particle.velocity, particle.maxSpeed);
 
       otherParticle.velocity.x = vFinal2.x;
       otherParticle.velocity.y = vFinal2.y;
+      otherParticle.velocity = this.limitVector( otherParticle.velocity, otherParticle.maxSpeed);
     }
 
   }
