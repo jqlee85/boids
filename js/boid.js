@@ -20,7 +20,7 @@ class Boid {
     this.radians = this.prevRadians;
 
     // Speed & Velocity
-    this.maxSpeed = 10 * this.quickness;
+    this.maxSpeed = 8 * this.quickness;
     this.prevSpeed = this.maxSpeed * .5;
     this.speed = this.prevSpeed;
     this.velocity = new Victor( this.speed * Math.cos( this.radians ), this.speed * Math.sin( this.radians ) );
@@ -32,6 +32,9 @@ class Boid {
   }
 
   seek( target ) {
+
+    //Use intoversion, and racism coefficients here
+
     console.log('seeking '+ target.location.x+','+target.location.y);
     var desired = this.limitVector( target.location.subtract(this.location), this.maxSpeed);
     var steerForce =  this.limitVector( desired.subtract(this.velocity), this.maxForce );
@@ -45,15 +48,8 @@ class Boid {
 
   nextPosition() {
 
-    var point = {
-      location: new Victor(size.width/2,size.height/2)
-    }
+    this.applyBehaviors();
 
-    // Apply Seek Force
-    this.applyForce( this.seek(point) );
-
-
-    this.wobble();
     this.location = this.location.add(this.velocity);
 
     // Angle
@@ -62,6 +58,21 @@ class Boid {
 
   }
 
+  applyBehaviors() {
+
+    // Apply Seek Force
+    var point = {
+      location: new Victor(size.width/2,size.height/2)
+    }
+    this.applyForce( this.seek(point) );
+
+    // Apply Avoid Force
+    // this.applyForce( this.avoid() );
+
+    // Apply Wobble Force
+    // this.wobble();
+
+  }
 
   movingRight() {
     if ( this.velocity.x > 0 ) {
@@ -80,7 +91,7 @@ class Boid {
   }
 
   wobble() {
-    this.radians = this.radians - this.getRandomInt(-1,1) / 100 * Math.PI;
+
 
   }
 
