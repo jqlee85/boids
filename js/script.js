@@ -24,13 +24,13 @@ var colors = [
   '#f9f9f9',
   '#f4416a'
 ];
-var numBoids = 500;
+var numBoids = Math.sqrt(canvas.width * canvas.height) /2;
 var radius = 5;
 var quickness = 1;
 var agility = 1;
-var introversion = .5;
+var introversion = 1;
 var racism = 0;
-// var maxSpeed = canvasWidth / 50;
+var speedIndex = 10;
 
 // Mouse
 var mouse = {
@@ -81,6 +81,7 @@ function init() {
       id: i,
       x: x,
       y: y,
+      speedIndex: speedIndex,
       radius: radius,
       agility: agility,
       quickness: quickness,

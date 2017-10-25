@@ -20,7 +20,7 @@ class Boid {
     this.radians = this.prevRadians;
 
     // Speed & Velocity
-    this.maxSpeed = 10 * this.quickness;
+    this.maxSpeed = speedIndex * this.quickness;
     this.prevSpeed = this.maxSpeed * .5;
     this.speed = this.prevSpeed;
     this.velocity = new Victor( this.speed * Math.cos( this.radians ), this.speed * Math.sin( this.radians ) );
@@ -67,7 +67,7 @@ class Boid {
       } else {
         var racismMultiplier = 0;
       }
-      var desiredSeparation = this.radius + boids[j].radius + ( 50 * this.introversion ) + ( 50 * racismMultiplier );
+      var desiredSeparation = this.radius + boids[j].radius + ( 25 * this.introversion ) + ( 50 * racismMultiplier );
       var sep = this.location.clone().distance(boids[j].location);
       if ( (sep > 0) && (sep < desiredSeparation) ) {
         var thisLocation = this.location.clone();
@@ -148,7 +148,7 @@ class Boid {
     var alignWeight = 1.5;
     var separateWeight = 1;
     var cohesionWeight = 1.4;
-    if (mouseSeek) var mouseWeight = .2;
+    if (mouseSeek) var mouseWeight = .1;
 
     // Apply forces
     this.applyForce( alignForce, alignWeight );
@@ -289,7 +289,7 @@ class Boid {
   detectCollision(){
 
     for (var i = 0; i < boids.length; i++) {
-      if ( this === boids[i]  ) { continue; }
+      if ( this === boids[i] ) { continue; }
       if ( getDistance( this.location.x, this.location.y, boids[i].location.x, boids[i].location.y) - ( this.radius + boids[i].radius ) < 0 ) {
         // console.log('collision');
         // console.log(this.radius +'+'+ boids[i].radius);
