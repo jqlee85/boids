@@ -20,7 +20,7 @@ class Boid {
     this.radians = this.prevRadians;
 
     // Speed & Velocity
-    this.maxSpeed = 5 * this.quickness;
+    this.maxSpeed = 10 * this.quickness;
     this.prevSpeed = this.maxSpeed * .5;
     this.speed = this.prevSpeed;
     this.velocity = new Victor( this.speed * Math.cos( this.radians ), this.speed * Math.sin( this.radians ) );
@@ -94,6 +94,7 @@ class Boid {
   align( boids ) {
     var neighborDist = 50;
     var sum = new Victor();
+    var steer = new Victor();
     var count = 0;
     for (var i = 0; i < boids.length; i++) {
       var dist = this.location.distance(boids[i].location);
@@ -108,21 +109,15 @@ class Boid {
       sum.normalize()
       sum.x = sum.x * this.maxSpeed;
       sum.y = sum.y * this.maxSpeed;
-      var steer = sum.subtract(this.velocity);
-      this.limitVector(steer,this.maxForce);
-      console.log('aligntowards');
-      console.log(sum);
-      return this.seek(sum);
+      steer = this.limitVector(sum.subtract(this.velocity),this.maxForce);
+      return steer;
     } else {
-
-      console.log('no count');
-      console.log(this.location);
-      return this.location;
+      return steer;
     }
   }
 
   cohesion( boids ) {
-    var neighborDist = 40;
+    var neighborDist = 50;
     var sum = new Victor();
     var count = 0;
     for (var i = 0; i < boids.length; i++) {
@@ -144,19 +139,20 @@ class Boid {
   flock() {
 
     // Get Forces
-    // var alignForce = this.align(boids);
-    var mouseForce = this.seek(mouse.location);
+    var alignForce = this.align(boids);
+    if (mouseSeek) var mouseForce = this.seek(mouse.location);
     var separateForce = this.separate(boids);
     var cohesionForce = this.cohesion(boids);
 
     // Weight Forces
-    var alignWeight = 1;
-    var separateWeight = 1.1;
-    var cohesionWeight = 1;
+    var alignWeight = 1.5;
+    var separateWeight = 1;
+    var cohesionWeight = 1.4;
+    if (mouseSeek) var mouseWeight = .2;
 
     // Apply forces
-    // this.applyForce( alignForce, alignWeight );
-    this.applyForce( mouseForce );
+    this.applyForce( alignForce, alignWeight );
+    if (mouseSeek) this.applyForce( mouseForce, mouseWeight );
     this.applyForce( separateForce, separateWeight );
     this.applyForce( cohesionForce, cohesionWeight );
 
@@ -219,14 +215,37 @@ class Boid {
 
   // Detect a wall hit and bounce
   wallBounce() {
-    if ( this.distanceFromHorWall() < this.radius  ) {
-      this.velocity.invertY();
 
+    if (walls) {
+      if (this.location.x < this.radius) {
+        this.location.x = this.radius;
+      } else if ( this.location.x > document.body.clientWidth - this.radius) {
+        this.location.x = document.body.clientWidth - this.radius;
+      }
+      if (this.location.y < this.radius) {
+        this.location.y = this.radius;
+      } else if ( this.location.y > document.body.clientHeight - this.radius ) {
+        this.location.y = document.body.clientHeight - this.radius;
+      }
+      if ( this.distanceFromHorWall() <= this.radius  ) {
+        this.velocity.invertY();
+      }
+      if ( this.distanceFromVertWall() <= this.radius  ) {
+        this.velocity.invertX();
+      }
+    } else {
+      if (this.location.x < 0) {
+        this.location.x = document.body.clientWidth;
+      } else if ( this.location.x > document.body.clientWidth ) {
+        this.location.x = 0;
+      }
+      if (this.location.y < 0) {
+        this.location.y = document.body.clientHeight;
+      } else if ( this.location.y > document.body.clientHeight ) {
+        this.location.y = 0;
+      }
     }
-    if ( this.distanceFromVertWall() < this.radius  ) {
-      this.velocity.invertX();
 
-    }
   }
 
   distanceFromVertWall() {

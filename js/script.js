@@ -10,6 +10,9 @@ var size = {
 canvas.width = size.width;
 canvas.height = size.height;
 
+var walls = true;
+var mouseSeek = false;
+
 // Boid Attributes
 var colors = [
   '#4286f4',
@@ -21,12 +24,12 @@ var colors = [
   '#f9f9f9',
   '#f4416a'
 ];
-var numBoids = 200;
+var numBoids = 500;
 var radius = 5;
 var quickness = 1;
 var agility = 1;
-var introversion = 1;
-var racism = 1;
+var introversion = .5;
+var racism = 0;
 // var maxSpeed = canvasWidth / 50;
 
 // Mouse
