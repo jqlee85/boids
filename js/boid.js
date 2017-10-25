@@ -96,7 +96,10 @@ class Boid {
     var point = {
       location: new Victor(size.width/2,size.height/2)
     }
+
     this.applyForce( this.seek(mouse) );
+
+
 
     // Apply Avoid Force
     // this.applyForce( this.avoid() );
