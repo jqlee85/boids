@@ -15,21 +15,18 @@ var colors = [
   '#4286f4',
   '#42ebf4',
   '#41f4a0',
-  '#8ff441',
   '#f4e841',
   '#f48341',
-  '#f44141',
   '#a341f4',
   '#f9f9f9',
   '#f4416a'
 ];
-var numBoids = 10;
+var numBoids = 200;
 var radius = 5;
-var quickness = .5;
+var quickness = 1;
 var agility = 1;
-var cohesion = .5;
-var introversion = .5;
-var racism = .5;
+var introversion = 1;
+var racism = 1;
 // var maxSpeed = canvasWidth / 50;
 
 // Mouse
@@ -85,7 +82,6 @@ function init() {
       agility: agility,
       quickness: quickness,
       color: randomColor(colors),
-      cohesion: cohesion,
       racism: racism,
       introversion: introversion
     } ) );

@@ -5,9 +5,9 @@ class Boid {
     // Initial Properties
     this.id = boid.id;
     this.location = new Victor( boid.x, boid.y );
-    var radiusCoefficients = [.6,.7,.8,.9,1];
-    this.radius = boid.radius * radiusCoefficients[ Math.floor(Math.random() * radiusCoefficients.length) ];
-    this.cohesion = boid.cohesion * this.getRandomInt(20,80) / 100;
+    var radiusCoefficients = [.5,.6,.7,.8,1];
+    this.radiusCoefficient = Math.floor(Math.random() * radiusCoefficients.length);
+    this.radius = boid.radius * radiusCoefficients[ this.radiusCoefficient ];
     this.introversion = boid.introversion * this.getRandomInt(20,80) / 100;
     this.agility = boid.agility * this.getRandomInt(20,80) / 100;
     this.quickness = boid.quickness * this.getRandomInt(50,100) / 100;
@@ -20,33 +20,20 @@ class Boid {
     this.radians = this.prevRadians;
 
     // Speed & Velocity
-    this.maxSpeed = 8 * this.quickness;
+    this.maxSpeed = 5 * this.quickness;
     this.prevSpeed = this.maxSpeed * .5;
     this.speed = this.prevSpeed;
     this.velocity = new Victor( this.speed * Math.cos( this.radians ), this.speed * Math.sin( this.radians ) );
     //Force and Accel
-    this.maxForce = 2;
+    this.maxForce = .5;
     this.acceleration = new Victor(0, 0);
 
 
   }
 
-  // Seek a given target's location
-  // seek( target ) {
-  //
-  //   // Clone Target Location
-  //   var targetLocation = target.location.clone();
-  //   //Use intoversion, and racism coefficients here
-  //
-  //   var desired = this.limitVector( targetLocation.subtract(this.location), this.maxSpeed);
-  //   var steerForce =  this.limitVector( desired.subtract(this.velocity), this.maxForce );
-  //   return steerForce;
-  // }
-
   // Arrival behavior to control boids arriving at their target
-  seek( target ) {
-
-    var targetLocation = target.location.clone();
+  seek( target ){
+    var targetLocation = target.clone();
     var diff = targetLocation.subtract(this.location);
     var desired = new Victor(diff.x,diff.y);
 
@@ -70,7 +57,116 @@ class Boid {
     return this.limitVector( desired.subtract(this.velocity), this.maxForce );
   }
 
-  applyForce( force ){
+  // Separation Force
+  separate( boids ){
+    var sum = new Victor();
+    var count = 0;
+    for (var j = 0; j < boids.length; j++) {
+      if ( this.color != boids[j].color ) {
+        var racismMultiplier = this.racism;
+      } else {
+        var racismMultiplier = 0;
+      }
+      var desiredSeparation = this.radius + boids[j].radius + ( 50 * this.introversion ) + ( 50 * racismMultiplier );
+      var sep = this.location.clone().distance(boids[j].location);
+      if ( (sep > 0) && (sep < desiredSeparation) ) {
+        var thisLocation = this.location.clone();
+        var diff = thisLocation.subtract(boids[j].location);
+        diff.normalize();
+        diff.x = diff.x / sep;
+        diff.y = diff.y / sep;
+        sum.add(diff);
+        count++;
+      }
+    }
+    if (count > 0) {
+      sum.x = sum.x / count;
+      sum.y = sum.y / count;
+      sum.normalize();
+      sum.x = sum.x * this.maxSpeed;
+      sum.y = sum.y * this.maxSpeed;
+      sum.subtract(this.velocity);
+      sum = this.limitVector(sum,this.maxForce);
+    }
+    return sum;
+  }
+
+  align( boids ) {
+    var neighborDist = 50;
+    var sum = new Victor();
+    var count = 0;
+    for (var i = 0; i < boids.length; i++) {
+      var dist = this.location.distance(boids[i].location);
+      if ( dist > 0 && dist < neighborDist ) {
+        sum.add(boids[i].velocity);
+        count++;
+      }
+    }
+    if (count > 0) {
+      sum.x = sum.x / count;
+      sum.y = sum.y / count;
+      sum.normalize()
+      sum.x = sum.x * this.maxSpeed;
+      sum.y = sum.y * this.maxSpeed;
+      var steer = sum.subtract(this.velocity);
+      this.limitVector(steer,this.maxForce);
+      console.log('aligntowards');
+      console.log(sum);
+      return this.seek(sum);
+    } else {
+
+      console.log('no count');
+      console.log(this.location);
+      return this.location;
+    }
+  }
+
+  cohesion( boids ) {
+    var neighborDist = 40;
+    var sum = new Victor();
+    var count = 0;
+    for (var i = 0; i < boids.length; i++) {
+      var dist = this.location.distance(boids[i].location);
+      if ( dist > 0 && dist < neighborDist ) {
+        sum.add(boids[i].location);
+        count++;
+      }
+    }
+    if (count > 0) {
+      sum.x = sum.x / count;
+      sum.y = sum.y / count;
+      return this.seek(sum);
+    } else {
+      return sum;
+    }
+  }
+
+  flock() {
+
+    // Get Forces
+    // var alignForce = this.align(boids);
+    var mouseForce = this.seek(mouse.location);
+    var separateForce = this.separate(boids);
+    var cohesionForce = this.cohesion(boids);
+
+    // Weight Forces
+    var alignWeight = 1;
+    var separateWeight = 1.1;
+    var cohesionWeight = 1;
+
+    // Apply forces
+    // this.applyForce( alignForce, alignWeight );
+    this.applyForce( mouseForce );
+    this.applyForce( separateForce, separateWeight );
+    this.applyForce( cohesionForce, cohesionWeight );
+
+  }
+
+  // Apply a force based on a coefficient
+  applyForce( force, coefficient ) {
+    if ( ! coefficient ) { var coefficient = 1; }
+    force.x = force.x * coefficient;
+    force.y = force.y * coefficient;
     this.velocity.add(force);
     this.velocity = this.limitVector( this.velocity, this.maxSpeed );
   }
@@ -78,34 +174,17 @@ class Boid {
   nextPosition() {
 
     // Loop through behaviors to apply forces
-    this.applyBehaviors();
+    this.flock();
     // Update location
     this.location = this.location.add(this.velocity);
 
     this.detectCollision();
 
+    this.wallBounce();
+
     // Update Angle
     this.radians = - this.velocity.angle();
     this.degrees = this.radians * 180/Math.PI;
-
-  }
-
-  applyBehaviors() {
-
-    // Apply Seek Force
-    var point = {
-      location: new Victor(size.width/2,size.height/2)
-    }
-
-    this.applyForce( this.seek(mouse) );
-
-
-
-    // Apply Avoid Force
-    // this.applyForce( this.avoid() );
-
-    // Apply Wobble Force
-    // this.wobble();
 
   }
 
@@ -123,23 +202,6 @@ class Boid {
     } else {
       return false;
     }
-  }
-
-  wobble() {
-
-
-  }
-
-  // Check for boid collisions and change course
-  avoidTheBoids() {
-
-  }
-
-  // Move towards boids if far away
-  approachBoids() {
-
-
-
   }
 
   // Limit a vector to a max magnitude
@@ -184,15 +246,6 @@ class Boid {
     }
   }
 
-  getDegrees(radians) {
-    var degs = radians * 180 / Math.PI;
-    if ( degs < 0 ) {
-      return Math.abs(degs);
-    } else {
-      return 360 - degs;
-    }
-  }
-
   getRandomInt(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
   }
@@ -209,8 +262,6 @@ class Boid {
 
     this.nextPosition();
 
-    this.wallBounce()
-
     this.draw();
 
   }
@@ -219,10 +270,10 @@ class Boid {
   detectCollision(){
 
     for (var i = 0; i < boids.length; i++) {
-      if ( this === boids[i] ) { continue; }
+      if ( this === boids[i]  ) { continue; }
       if ( getDistance( this.location.x, this.location.y, boids[i].location.x, boids[i].location.y) - ( this.radius + boids[i].radius ) < 0 ) {
-        console.log('collision');
-        console.log(this.radius +'+'+ boids[i].radius);
+        // console.log('collision');
+        // console.log(this.radius +'+'+ boids[i].radius);
         this.resolveCollision( this, boids[i]);
       }
     }
