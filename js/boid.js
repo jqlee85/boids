@@ -31,14 +31,43 @@ class Boid {
 
   }
 
+  // Seek a given target's location
+  // seek( target ) {
+  //
+  //   // Clone Target Location
+  //   var targetLocation = target.location.clone();
+  //   //Use intoversion, and racism coefficients here
+  //
+  //   var desired = this.limitVector( targetLocation.subtract(this.location), this.maxSpeed);
+  //   var steerForce =  this.limitVector( desired.subtract(this.velocity), this.maxForce );
+  //   return steerForce;
+  // }
+
+  // Arrival behavior to control boids arriving at their target
   seek( target ) {
 
-    //Use intoversion, and racism coefficients here
+    var targetLocation = target.location.clone();
+    var diff = targetLocation.subtract(this.location);
+    var desired = new Victor(diff.x,diff.y);
 
-    console.log('seeking '+ target.location.x+','+target.location.y);
-    var desired = this.limitVector( target.location.subtract(this.location), this.maxSpeed);
-    var steerForce =  this.limitVector( desired.subtract(this.velocity), this.maxForce );
-    return steerForce;
+    if (target.radius) {
+      var buffer = target.radius + this.radius + 1;
+    } else {
+      var buffer = this.radius * 2 + 1;
+    }
+
+    var dist = diff.magnitude();
+    if (dist < buffer) {
+      desired.x = 0;
+      desired.y = 0;
+    } else if ( dist <= 100 ) {
+      desired.normalize();
+      desired.x = desired.x * this.maxSpeed * dist / 100;
+      desired.y = desired.y * this.maxSpeed * dist / 100;
+    } else {
+      desired = this.limitVector( desired, this.maxSpeed);
+    }
+    return this.limitVector( desired.subtract(this.velocity), this.maxForce );
   }
 
   applyForce( force ){
@@ -48,11 +77,14 @@ class Boid {
 
   nextPosition() {
 
+    // Loop through behaviors to apply forces
     this.applyBehaviors();
-
+    // Update location
     this.location = this.location.add(this.velocity);
 
-    // Angle
+    this.detectCollision();
+
+    // Update Angle
     this.radians = - this.velocity.angle();
     this.degrees = this.radians * 180/Math.PI;
 
@@ -64,7 +96,7 @@ class Boid {
     var point = {
       location: new Victor(size.width/2,size.height/2)
     }
-    this.applyForce( this.seek(point) );
+    this.applyForce( this.seek(mouse) );
 
     // Apply Avoid Force
     // this.applyForce( this.avoid() );
@@ -109,11 +141,15 @@ class Boid {
 
   // Limit a vector to a max magnitude
   limitVector( vector, max ) {
-    var newVector = vector;
-    newVector.normalize();
-    newVector.x = newVector.x * max;
-    newVector.y = newVector.y * max;
-    return newVector;
+    if (vector.length() > max) {
+      var newVector = vector.clone();
+      newVector.normalize();
+      newVector.x = newVector.x * max;
+      newVector.y = newVector.y * max;
+      return newVector;
+    } else {
+      return vector;
+    }
   }
 
   // Detect a wall hit and bounce
@@ -172,8 +208,6 @@ class Boid {
 
     this.wallBounce()
 
-    this.detectCollision();
-
     this.draw();
 
   }
@@ -182,7 +216,7 @@ class Boid {
   detectCollision(){
 
     for (var i = 0; i < boids.length; i++) {
-      if ( this === boids[i] && this.radius == boids[i].radius ) { continue; }
+      if ( this === boids[i] ) { continue; }
       if ( getDistance( this.location.x, this.location.y, boids[i].location.x, boids[i].location.y) - ( this.radius + boids[i].radius ) < 0 ) {
         console.log('collision');
         console.log(this.radius +'+'+ boids[i].radius);

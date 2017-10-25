@@ -23,7 +23,7 @@ var colors = [
   '#f9f9f9',
   '#f4416a'
 ];
-var numBoids = 40;
+var numBoids = 10;
 var radius = 5;
 var quickness = .5;
 var agility = 1;
@@ -41,6 +41,8 @@ var mouse = {
 addEventListener('mousemove', function(event){
 	mouse.location.x = event.clientX;
 	mouse.location.y = event.clientY;
+  console.log('mouse'+ mouse.location);
+
 });
 
 addEventListener('resize', function(){
