@@ -15,19 +15,19 @@
     <canvas id="boids"></canvas>
 		<div id="boids-controls-container">
 			<div class="boids-control">
-				<p>Coherence<p>
+				<p>Walls</p>
 			</div>
 			<div class="boids-control">
-				<p>Avoidance<p>
+				<p>Introversion<p>
 			</div>
 			<div class="boids-control">
 				<p>Speed<p>
 			</div>
 			<div class="boids-control">
-				<p>Agility<p>
+				<p>Racism<p>
 			</div>
 			<div class="boids-control">
-				<p>Racism<p>
+				<p>Diversity<p>
 			</div>
 		</div>
 	</div>
