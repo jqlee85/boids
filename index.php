@@ -14,38 +14,38 @@
   <div id="boids-wrapper">
     <canvas id="boids"></canvas>
 		<div id="boids-controls-container">
-			<div class="boids-control boids-control-checkbox">
-				<p>Walls</p>
-				<div class="squaredThree">
-		      <input type="checkbox" value="None" id="squaredThree" name="walls" checked />
-	    	</div>
-				<label for="squaredThree"></label>
-			</div>
 			<div class="boids-control boids-control-range">
 				<div class="range-slider">
 					<label for="introversion"><p>Introversion</p></label>
-					<input class="input-range" orient="vertical" type="range" step="1" value="5" min="0" max="10" name="introversion">
+					<input class="input-range" type="range" step="1" value="5" min="0" max="10" name="introversion">
 			    <span class="range-value"></span>
 				</div>
 			</div>
 			<div class="boids-control boids-control-range">
 				<div class="range-slider">
 					<label for="introversion"><p>Speed</p></label>
-					<input class="input-range" orient="vertical" type="range" step="1" value="5" min="0" max="10" name="speed">
+					<input class="input-range" type="range" step="1" value="5" min="0" max="10" name="speed">
 			    <span class="range-value"></span>
+				</div>
+			</div>
+			<div class="boids-control boids-control-checkbox">
+				<div class="checkbox">
+					<p>Walls</p>
+					<input type="checkbox" value="none" id="walls" name="walls" checked />
+					<label for="walls"></label>
 				</div>
 			</div>
 			<div class="boids-control boids-control-range">
 				<div class="range-slider">
 					<label for="introversion"><p>Racism</p></label>
-					<input class="input-range" orient="vertical" type="range" step="1" value="0" min="0" max="10" name="racism">
+					<input class="input-range" type="range" step="1" value="0" min="0" max="10" name="racism">
 			    <span class="range-value"></span>
 				</div>
 			</div>
 			<div class="boids-control boids-control-range">
 				<div class="range-slider">
 					<label for="introversion"><p>Diversity</p></label>
-					<input class="input-range" orient="vertical" type="range" step="1" value="8" min="1" max="8" name="diversity">
+					<input class="input-range" type="range" step="1" value="8" min="1" max="8" name="diversity">
 			    <span class="range-value"></span>
 				</div>
 			</div>

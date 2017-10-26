@@ -273,8 +273,6 @@ class Boid {
     for (var i = 0; i < boids.length; i++) {
       if ( this === boids[i] ) { continue; }
       if ( getDistance( this.location.x, this.location.y, boids[i].location.x, boids[i].location.y) - ( this.radius + boids[i].radius ) < 0 ) {
-        // console.log('collision');
-        // console.log(this.radius +'+'+ boids[i].radius);
         this.resolveCollision( this, boids[i]);
       }
     }

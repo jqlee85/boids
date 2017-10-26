@@ -24,7 +24,8 @@ var colors = [
   '#f9f9f9',
   '#f4416a'
 ];
-var numBoids = Math.sqrt(canvas.width * canvas.height) /2;
+var numBoids = Math.sqrt(canvas.width * canvas.height) / 2;
+if ( numBoids > 500 ) numBoids = 500;
 var radius = 5;
 var quickness = 1;
 var agility = 1;
@@ -41,8 +42,6 @@ var mouse = {
 addEventListener('mousemove', function(event){
 	mouse.location.x = event.clientX;
 	mouse.location.y = event.clientY;
-  console.log('mouse'+ mouse.location);
-
 });
 
 addEventListener('resize', function(){
@@ -50,7 +49,6 @@ addEventListener('resize', function(){
   size.height = innerHeight;
   canvas.width = innerWidth;
 	canvas.height = innerHeight;
-	// init();
 });
 
 // Create Boids Array

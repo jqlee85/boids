@@ -121,22 +121,24 @@ table{
   text-transform: uppercase;
   width: auto;
   height: auto;
-  margin: 10px 15px;
+  margin-left: 10px;
+  margin-right: 10px;
   flex-wrap: 1;
 }
 .boids-control-range label {
-  margin: 1em 0;
+
 }
 
 .range-slider .input-range {
     height: auto;
-    margin-top: 1em;
-    background: #none;
+    margin-top: 12px;
+    margin-bottom: 2px;
+    background: none;
     outline: none;
     writing-mode: bt-lr; /* IE */
 }
 
-// Firefox Overrides
+/* Firefox Overrides */
 ::-moz-range-track {
     background: #ccc;
     border: 0;
@@ -152,24 +154,39 @@ input::-moz-focus-inner {
 .boids-control-checkbox {
   position: relative;
 }
+.checkbox {
+  position: relative;
+}
+.checkbox p {
+  z-index: 1;
+}
+.label-wrapper {
+  z-index: 1;
+  position:absolute;
+  width: 100%;
+  height: 15px;
+  margin-top: 10px;
+  margin-bottom: 2px;
+}
 .boids-control-checkbox label {
-  width: 30px;
-  height: 30px;
-  cursor: pointer;
-  position: absolute;
+  width: 15px;
+  height: 15px;
+  display: block;
+  position: relative;
+  margin: auto;
   top: 0;
   left: 0;
   background: rgba(34,34,34,.8);
-  border: 2px solid #fff;
+  border: 1px solid #fff;
   box-shadow: inset 0px 1px 1px rgba(0, 0, 0, 0.5), 0px 1px 0px rgba(255, 255, 255, 0.4);
 }
 .boids-control-checkbox label:after {
   content: '';
-  width: 9px;
+  width: 10px;
   height: 5px;
   position: absolute;
-  top: 4px;
-  left: 4px;
+  top: 2px;
+  left: 1px;
   border: 3px solid #fcfff4;
   border-top: none;
   border-right: none;
@@ -182,8 +199,11 @@ input::-moz-focus-inner {
   opacity: 0.3;
 }
 .boids-control-checkbox input[type=checkbox] {
-  margin-top: 1em;
+  height: 15px;
+  width: 15px;
+  margin-top: 12px;
   visibility: hidden;
+  z-index: 10;
 }
 .boids-control-checkbox input[type=checkbox]:checked + label:after {
   opacity: 1;
