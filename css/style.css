@@ -175,7 +175,7 @@ input::-moz-focus-inner {
   position: relative;
   box-sizing: border-box;
   margin: auto;
-  top: 0;
+  top: -3px;
   left: 0;
   background: rgba(34,34,34,.8);
   border: 1px solid #fff;
