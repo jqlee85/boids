@@ -148,7 +148,16 @@ function startAnimating() {
   animate();
 }
 
-
-
 init();
 startAnimating(60);
+
+Victor.prototype.limitMagnitude = function (max) {
+
+  if (this.length() > max) {
+    this.normalize();
+    this.multiply({x:max,y:max});
+  } else {
+    return false;
+  }
+
+};

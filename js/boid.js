@@ -51,9 +51,11 @@ class Boid {
       desired.normalize();
       desired.divide({x:this.maxSpeed * dist / 100,y:this.maxSpeed * dist / 100});
     } else {
-      desired = this.limitVector( desired, this.maxSpeed);
+      desired.limitMagnitude(this.maxSpeed);
     }
-    return this.limitVector( desired.subtract(this.velocity), this.maxForce );
+    desired.subtract(this.velocity);
+    desired.limitMagnitude(this.maxForce);
+    return desired;
   }
 
   // Separation Force
@@ -82,7 +84,7 @@ class Boid {
       sum.normalize();
       sum.multiply({x:this.maxSpeed,y:this.maxSpeed});
       sum.subtract(this.velocity);
-      sum = this.limitVector(sum,this.maxForce);
+      sum.limitMagnitude(this.maxForce);
     }
     return sum;
   }
@@ -103,7 +105,8 @@ class Boid {
       sum.divide({x:count,y:count});
       sum.normalize()
       sum.multiply({x:this.maxSpeed,y:this.maxSpeed});
-      steer = this.limitVector(sum.subtract(this.velocity),this.maxForce);
+      steer = sum.subtract(this.velocity);
+      steer.limitMagnitude(this.maxForce);
       return steer;
     } else {
       return steer;
@@ -156,7 +159,7 @@ class Boid {
     if ( ! coefficient ) { var coefficient = 1; }
     force.multiply({x:coefficient,y:coefficient});
     this.velocity.add(force);
-    this.velocity = this.limitVector( this.velocity, this.maxSpeed );
+    this.velocity.limitMagnitude( this.maxSpeed );
   }
 
   nextPosition() {
@@ -189,18 +192,6 @@ class Boid {
       return true;
     } else {
       return false;
-    }
-  }
-
-  // Limit a vector to a max magnitude
-  limitVector( vector, max ) {
-    if (vector.length() > max) {
-      var newVector = vector.clone();
-      newVector.normalize();
-      newVector.multiply({x:max,y:max});
-      return newVector;
-    } else {
-      return vector;
     }
   }
 
@@ -348,11 +339,11 @@ class Boid {
       // Swap particle velocities for realistic bounce effect
       particle.velocity.x = vFinal1.x;
       particle.velocity.y = vFinal1.y;
-      particle.velocity = this.limitVector( particle.velocity, particle.maxSpeed);
+      particle.velocity.limitMagnitude(particle.maxSpeed);
 
       otherParticle.velocity.x = vFinal2.x;
       otherParticle.velocity.y = vFinal2.y;
-      otherParticle.velocity = this.limitVector( otherParticle.velocity, otherParticle.maxSpeed);
+      otherParticle.velocity.limitMagnitude(otherParticle.maxSpeed);
     }
 
   }
