@@ -49,8 +49,7 @@ class Boid {
       desired.y = 0;
     } else if ( dist <= 100 ) {
       desired.normalize();
-      desired.x = desired.x * this.maxSpeed * dist / 100;
-      desired.y = desired.y * this.maxSpeed * dist / 100;
+      desired.divide({x:this.maxSpeed * dist / 100,y:this.maxSpeed * dist / 100});
     } else {
       desired = this.limitVector( desired, this.maxSpeed);
     }
@@ -73,18 +72,15 @@ class Boid {
         var thisLocation = this.location.clone();
         var diff = thisLocation.subtract(boids[j].location);
         diff.normalize();
-        diff.x = diff.x / sep;
-        diff.y = diff.y / sep;
+        diff.divide({x:sep,y:sep});
         sum.add(diff);
         count++;
       }
     }
     if (count > 0) {
-      sum.x = sum.x / count;
-      sum.y = sum.y / count;
+      sum.divide({x:count,y:count});
       sum.normalize();
-      sum.x = sum.x * this.maxSpeed;
-      sum.y = sum.y * this.maxSpeed;
+      sum.multiply({x:this.maxSpeed,y:this.maxSpeed});
       sum.subtract(this.velocity);
       sum = this.limitVector(sum,this.maxForce);
     }
@@ -104,11 +100,9 @@ class Boid {
       }
     }
     if (count > 0) {
-      sum.x = sum.x / count;
-      sum.y = sum.y / count;
+      sum.divide({x:count,y:count});
       sum.normalize()
-      sum.x = sum.x * this.maxSpeed;
-      sum.y = sum.y * this.maxSpeed;
+      sum.multiply({x:this.maxSpeed,y:this.maxSpeed});
       steer = this.limitVector(sum.subtract(this.velocity),this.maxForce);
       return steer;
     } else {
@@ -128,8 +122,7 @@ class Boid {
       }
     }
     if (count > 0) {
-      sum.x = sum.x / count;
-      sum.y = sum.y / count;
+      sum.divide({x: count,y:count});
       return this.seek(sum);
     } else {
       return sum;
@@ -161,8 +154,7 @@ class Boid {
   // Apply a force based on a coefficient
   applyForce( force, coefficient ) {
     if ( ! coefficient ) { var coefficient = 1; }
-    force.x = force.x * coefficient;
-    force.y = force.y * coefficient;
+    force.multiply({x:coefficient,y:coefficient});
     this.velocity.add(force);
     this.velocity = this.limitVector( this.velocity, this.maxSpeed );
   }
@@ -205,8 +197,7 @@ class Boid {
     if (vector.length() > max) {
       var newVector = vector.clone();
       newVector.normalize();
-      newVector.x = newVector.x * max;
-      newVector.y = newVector.y * max;
+      newVector.multiply({x:max,y:max});
       return newVector;
     } else {
       return vector;
