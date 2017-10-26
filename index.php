@@ -31,8 +31,22 @@
 			<div class="boids-control boids-control-checkbox">
 				<div class="checkbox">
 					<p>Walls</p>
-					<input type="checkbox" data-val="true" id="walls" name="walls"/>
+					<input type="checkbox" id="walls" name="walls"/>
 					<label for="walls"></label>
+				</div>
+			</div>
+			<div class="boids-control boids-control-checkbox">
+				<div class="checkbox">
+					<p>Collisions</p>
+					<input type="checkbox" id="collision-detection" name="collision-detection"/>
+					<label for="collision-detection"></label>
+				</div>
+			</div>
+			<div class="boids-control boids-control-checkbox">
+				<div class="checkbox">
+					<p>Seek Mouse</p>
+					<input type="checkbox" id="mouse-seek" name="mouse-seek"/>
+					<label for="mouse-seek"></label>
 				</div>
 			</div>
 			<div class="boids-control boids-control-range">

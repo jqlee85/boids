@@ -10,7 +10,6 @@ class Boid {
     this.radius = boid.radius * radiusCoefficients[ this.radiusCoefficient ];
     this.introversionCoefficient = getRandomInt(20,80) / 100;
     this.introversion = boid.introversion * this.introversionCoefficient;
-    this.agility = boid.agility * getRandomInt(20,80) / 100;
     this.quicknessCoefficient = getRandomInt(50,100) / 100;
     this.quickness = boid.quickness * this.quicknessCoefficient;
     this.racismCoefficient = getRandomInt(20,80) / 100;
@@ -18,18 +17,13 @@ class Boid {
     this.color = boid.color;
     this.mass = (4/3) * Math.PI * Math.pow( this.radius,3 );
 
-    // Direction
-    this.prevRadians = Math.PI * getRandomInt(-99,100) / 100;
-    this.radians = this.prevRadians;
-
-    // Speed & Velocity
+    // Speed & Velocity & Force
     this.maxSpeed = speedIndex * this.quickness;
-    this.prevSpeed = this.maxSpeed * .5;
-    this.speed = this.prevSpeed;
-    this.velocity = new Victor( this.speed * Math.cos( this.radians ), this.speed * Math.sin( this.radians ) );
+    this.speed = this.maxSpeed * .5;
+    var radians = Math.PI * getRandomInt(-99,100) / 100;
+    this.velocity = new Victor( this.speed * Math.cos( radians ), this.speed * Math.sin( radians ) );
     //Force and Accel
     this.maxForce = .5;
-    this.acceleration = new Victor(0, 0);
 
 
   }
@@ -144,10 +138,10 @@ class Boid {
     var cohesionForce = this.cohesion(boids);
 
     // Weight Forces
-    var alignWeight = 1.5;
+    var alignWeight = 1.2;
     var separateWeight = 1;
-    var cohesionWeight = 1.4;
-    if (mouseSeek) var mouseWeight = .1;
+    var cohesionWeight = 1;
+    if (mouseSeek) var mouseWeight = .2;
 
     // Apply forces
     this.applyForce( alignForce, alignWeight );
@@ -169,72 +163,63 @@ class Boid {
 
     // Loop through behaviors to apply forces
     this.flock();
+
     // Update location
     this.location = this.location.add(this.velocity);
 
-    this.detectCollision();
+    // Stricter collision detection if enabled
+    if ( collisions ) { this.detectCollision(); }
 
-    this.wallBounce();
-
-    // Update Angle
-    this.radians = - this.velocity.angle();
-    this.degrees = this.radians * 180/Math.PI;
+    // Check edges for walls or overruns
+    this.edgeCheck();
 
   }
 
-  movingRight() {
-    if ( this.velocity.x > 0 ) {
-      return true;
-    } else {
-      return false;
-    }
-  }
-
-  movingDown() {
-    if ( this.velocity.y > 0 ) {
-      return true;
-    } else {
-      return false;
-    }
-  }
-
-  // Detect a wall hit and bounce
-  wallBounce() {
-
+  // Check for wall bounces and border wrapping
+  edgeCheck() {
     if (walls) {
-      if (this.location.x < this.radius) {
-        this.location.x = this.radius;
-      } else if ( this.location.x > document.body.clientWidth - this.radius) {
-        this.location.x = document.body.clientWidth - this.radius;
-      }
-      if (this.location.y < this.radius) {
-        this.location.y = this.radius;
-      } else if ( this.location.y > document.body.clientHeight - this.radius ) {
-        this.location.y = document.body.clientHeight - this.radius;
-      }
-      if ( this.distanceFromHorWall() <= this.radius  ) {
-        this.velocity.invertY();
-      }
-      if ( this.distanceFromVertWall() <= this.radius  ) {
-        this.velocity.invertX();
-      }
+      this.wallBounce();
     } else {
-      if (this.location.x < 0) {
-        this.location.x = document.body.clientWidth;
-      } else if ( this.location.x > document.body.clientWidth ) {
-        this.location.x = 0;
-      }
-      if (this.location.y < 0) {
-        this.location.y = document.body.clientHeight;
-      } else if ( this.location.y > document.body.clientHeight ) {
-        this.location.y = 0;
-      }
+      this.borderWrap();
     }
+  }
 
+  // Check for agents passing borders and wrap to other side
+  borderWrap() {
+    if (this.location.x < 0) {
+      this.location.x = document.body.clientWidth;
+    } else if ( this.location.x > document.body.clientWidth ) {
+      this.location.x = 0;
+    }
+    if (this.location.y < 0) {
+      this.location.y = document.body.clientHeight;
+    } else if ( this.location.y > document.body.clientHeight ) {
+      this.location.y = 0;
+    }
+  }
+
+  // Detect a wall hit and bounce back if necessary
+  wallBounce() {
+    if (this.location.x < this.radius) {
+      this.location.x = this.radius;
+    } else if ( this.location.x > document.body.clientWidth - this.radius) {
+      this.location.x = document.body.clientWidth - this.radius;
+    }
+    if (this.location.y < this.radius) {
+      this.location.y = this.radius;
+    } else if ( this.location.y > document.body.clientHeight - this.radius ) {
+      this.location.y = document.body.clientHeight - this.radius;
+    }
+    if ( this.distanceFromHorWall() <= this.radius  ) {
+      this.velocity.invertY();
+    }
+    if ( this.distanceFromVertWall() <= this.radius  ) {
+      this.velocity.invertX();
+    }
   }
 
   distanceFromVertWall() {
-    if (this.movingRight()) {
+    if (this.velocity.x > 0) {
       return document.body.clientWidth - ( this.location.x );
     } else {
       return this.location.x;
@@ -243,13 +228,14 @@ class Boid {
   }
 
   distanceFromHorWall() {
-    if (this.movingDown()) {
+    if (this.velocity.y > 0) {
       return document.body.clientHeight - ( this.location.y );
     } else {
       return this.location.y;
     }
   }
 
+  // Draw Boid to screen
   draw(){
     c.beginPath();
     c.arc(this.location.x, this.location.y, this.radius, 0, Math.PI * 2, false);
@@ -258,10 +244,10 @@ class Boid {
     c.closePath();
   }
 
+  // Update a boid's position and draw
   update() {
 
     this.nextPosition();
-
     this.draw();
 
   }
@@ -344,5 +330,6 @@ class Boid {
     }
 
   }
+
 
 }

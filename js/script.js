@@ -16,8 +16,10 @@ var size = {
 canvas.width = size.width;
 canvas.height = size.height;
 
+// Checkbox Options
 var walls = true;
 var mouseSeek = false;
+var collisions = true;
 
 // Boid Attributes
 var colors = [
@@ -37,7 +39,6 @@ var numBoids = Math.sqrt(canvas.width * canvas.height) / 2;
 if ( numBoids > maxBoids ) numBoids = maxBoids;
 var radius = 5;
 var quickness = 1;
-var agility = 1;
 var introversion = .5;
 var racism = 0;
 var speedIndex = 8;
@@ -90,7 +91,6 @@ function init() {
       y: y,
       speedIndex: speedIndex,
       radius: radius,
-      agility: agility,
       quickness: quickness,
       color: randomColor(colors),
       racism: racism,
@@ -179,6 +179,28 @@ wallInput.onclick = function() {
   } else {
     this.checked = true;
     walls = true;
+  }
+}
+var collisionDetectionInput = document.getElementById('collision-detection');
+collisionDetectionInput.checked = false;
+collisionDetectionInput.onclick = function() {
+  if ( !this.checked ) {
+    this.checked = false;
+    collisions = false;
+  } else {
+    this.checked = true;
+    collisions = true;
+  }
+}
+var mouseSeekInput = document.getElementById('mouse-seek');
+mouseSeekInput.checked = false;
+mouseSeekInput.onclick = function() {
+  if ( !this.checked ) {
+    this.checked = false;
+    mouseSeek = false;
+  } else {
+    this.checked = true;
+    mouseSeek = true;
   }
 }
 var rangeInputs = document.getElementsByClassName('input-range');
