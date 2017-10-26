@@ -8,10 +8,13 @@ class Boid {
     var radiusCoefficients = [.5,.6,.7,.8,1];
     this.radiusCoefficient = Math.floor(Math.random() * radiusCoefficients.length);
     this.radius = boid.radius * radiusCoefficients[ this.radiusCoefficient ];
-    this.introversion = boid.introversion * this.getRandomInt(20,80) / 100;
+    this.introversionCoefficient = this.getRandomInt(20,80) / 100;
+    this.introversion = boid.introversion * this.introversionCoefficient;
     this.agility = boid.agility * this.getRandomInt(20,80) / 100;
-    this.quickness = boid.quickness * this.getRandomInt(50,100) / 100;
-    this.racism = boid.racism * this.getRandomInt(20,80) / 100;
+    this.quicknessCoefficient = this.getRandomInt(50,100) / 100;
+    this.quickness = boid.quickness * this.quicknessCoefficient;
+    this.racismCoefficient = this.getRandomInt(20,80) / 100;
+    this.racism = boid.racism * this.racismCoefficient;
     this.color = boid.color;
     this.mass = (4/3) * Math.PI * Math.pow( this.radius,3 );
 

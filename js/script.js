@@ -2,6 +2,12 @@
 const canvas = document.getElementById('boids');
 const c = canvas.getContext('2d');
 
+// Get Firefox
+var browser=navigator.userAgent.toLowerCase();
+if(browser.indexOf('firefox') > -1) {
+  var firefox = true;
+}
+
 // Set Size
 var size = {
   width: window.innerWidth || document.body.clientWidth,
@@ -16,20 +22,23 @@ var mouseSeek = false;
 // Boid Attributes
 var colors = [
   '#4286f4',
-  '#42ebf4',
+  '#f4416a',
   '#41f4a0',
-  '#f4e841',
-  '#f48341',
-  '#a341f4',
   '#f9f9f9',
-  '#f4416a'
+  '#a341f4',
+  '#f48341',
+  '#f4e841',
+  '#42ebf4'
 ];
+var diversity = 8;
+if (firefox) maxBoids = 250;
+else maxBoids = 500;
 var numBoids = Math.sqrt(canvas.width * canvas.height) / 2;
-if ( numBoids > 500 ) numBoids = 500;
+if ( numBoids > maxBoids ) numBoids = maxBoids;
 var radius = 5;
 var quickness = 1;
 var agility = 1;
-var introversion = 1;
+var introversion = .5;
 var racism = 0;
 var speedIndex = 10;
 
@@ -159,3 +168,41 @@ Victor.prototype.limitMagnitude = function (max) {
   }
 
 };
+
+// Inputs
+var wallInput = document.getElementById('walls');
+wallInput.checked = true;
+wallInput.onclick = function() {
+  if ( !this.checked ) {
+    this.checked = false;
+    walls = false;
+  } else {
+    this.checked = true;
+    walls = true;
+  }
+}
+var rangeInputs = document.getElementsByClassName('input-range');
+var diversityInput = document.getElementById('diversity');
+diversityInput.onchange = function() {
+  diversity = this.value;
+  updateattributes({diversity: diversity});
+  console.log(diversity);
+}
+var racismInput = document.getElementById('racism');
+racismInput.onchange = function() {
+  racism = this.value / 5;
+  updateattributes({racism: racism});
+  console.log(racism);
+}
+var introversionInput = document.getElementById('introversion');
+introversionInput.onchange = function() {
+  introversion = this.value / 10;
+  updateattributes({introversion: introversion});
+  console.log(introversion);
+}
+var speedInput = document.getElementById('speed');
+speedInput.onchange = function() {
+  quickness = this.value / 10 + .5;
+  updateattributes({quickness: quickness});
+  console.log(quickness);
+}
