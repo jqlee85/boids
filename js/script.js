@@ -19,7 +19,7 @@ canvas.height = size.height;
 // Checkbox Options
 var walls = true;
 var mouseSeek = false;
-var collisions = true;
+var collisions = false;
 
 // Boid Attributes
 var colors = [
@@ -123,6 +123,14 @@ function animate() {
   now = Date.now();
   elapsed = now - then;
 
+  // FPS Reporting
+  fpsReport++;
+  if (fpsReport > 60) {
+    fpsNum.innerHTML = Math.floor(1000/elapsed);
+    fpsReport = 0;
+  }
+
+
   // If enough time has elapsed, draw the next frame
   if (elapsed > fpsInterval) {
 
@@ -145,6 +153,8 @@ function animate() {
 var stop = false;
 var frameCount = 0;
 var fps, fpsInterval, startTime, now, then, elapsed;
+var fpsNum = document.getElementById('fps-number');
+var fpsReport = 58;
 
 // Start animation with specified framerate
 function startAnimating() {
@@ -208,13 +218,11 @@ var diversityInput = document.getElementById('diversity');
 diversityInput.onchange = function() {
   diversity = this.value;
   updateDiversity(diversity);
-  console.log(diversity);
 }
 var racismInput = document.getElementById('racism');
 racismInput.onchange = function() {
   racism = this.value / 5;
   updateRacism(racism);
-  console.log(racism);
 }
 var introversionInput = document.getElementById('introversion');
 introversionInput.onchange = function() {
@@ -228,14 +236,12 @@ speedInput.onchange = function() {
 }
 
 function updateDiversity(value) {
-  console.log('updateDiversity');
   for (var i=0; i<boids.length; i++) {
     boids[i].color = colors[ i % value ];
   }
 }
 
 function updateQuickness(value) {
-  console.log('updateQuickness');
   for (var i=0; i<boids.length; i++) {
     boids[i].quickness = value * boids[i].quicknessCoefficient;
     boids[i].maxSpeed = speedIndex * boids[i].quickness;
@@ -243,14 +249,12 @@ function updateQuickness(value) {
 }
 
 function updateIntroversion(value) {
-  console.log('updateIntroversion');
   for (var i=0; i<boids.length; i++) {
     boids[i].introversion = value * boids[i].introversionCoefficient;
   }
 }
 
 function updateRacism(value) {
-  console.log('updateRacism');
   for (var i=0; i<boids.length; i++) {
     boids[i].racism = value * boids[i].racismCoefficient;
   }

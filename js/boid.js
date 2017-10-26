@@ -274,12 +274,10 @@ class Boid {
  */
 
  rotate(velocity, angle) {
-    var rotatedVelocities = {
+    return {
         x: velocity.x * Math.cos(angle) - velocity.y * Math.sin(angle),
         y: velocity.x * Math.sin(angle) + velocity.y * Math.cos(angle)
     };
-
-    return rotatedVelocities;
   }
 
 /**
@@ -291,6 +289,7 @@ class Boid {
  * @return Null | Does not return a value
  */
  resolveCollision(particle, otherParticle) {
+    
     var xVelocityDiff = particle.velocity.x - otherParticle.velocity.x;
     var yVelocityDiff = particle.velocity.y - otherParticle.velocity.y;
 

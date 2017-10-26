@@ -79,6 +79,9 @@ table{
   width: 100vw;
   overflow: hidden;
   background-color: #222;
+  color: #fafafa;
+  color: rgba(255,255,255,.9);
+  font-family: arial;
 }
 
 #boids-wrapper {
@@ -112,11 +115,11 @@ table{
   width: 100%;
   height: auto;
   padding: 20px 0;
+  text-transform: uppercase;
 }
 
 .boids-control {
   text-align: center;
-  color: #fff;
   font-family: arial;
   text-transform: uppercase;
   width: auto;
@@ -210,3 +213,12 @@ input::-moz-focus-inner {
   opacity: 1;
 }
 /* end Checkbox */
+#fps {
+  position: absolute;
+  left:0;
+  bottom: 0;
+  font-size: 14px;
+  color: #fafafa;
+  color: rgba(255,255,255,.8);
+  padding: 5px;
+}
