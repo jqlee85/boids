@@ -173,6 +173,7 @@ input::-moz-focus-inner {
   height: 15px;
   display: block;
   position: relative;
+  box-sizing: border-box;
   margin: auto;
   top: 0;
   left: 0;
@@ -182,10 +183,10 @@ input::-moz-focus-inner {
 }
 .boids-control-checkbox label:after {
   content: '';
-  width: 10px;
+  width: 8px;
   height: 5px;
   position: absolute;
-  top: 2px;
+  top: 1px;
   left: 1px;
   border: 3px solid #fcfff4;
   border-top: none;
@@ -201,7 +202,7 @@ input::-moz-focus-inner {
 .boids-control-checkbox input[type=checkbox] {
   height: 0px;
   width: 15px;
-  margin-top: 0px;
+  margin: 0 !important;
   visibility: hidden;
   z-index: 10;
 }

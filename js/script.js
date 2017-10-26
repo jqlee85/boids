@@ -40,7 +40,7 @@ var quickness = 1;
 var agility = 1;
 var introversion = .5;
 var racism = 0;
-var speedIndex = 10;
+var speedIndex = 8;
 
 // Mouse
 var mouse = {
@@ -185,24 +185,51 @@ var rangeInputs = document.getElementsByClassName('input-range');
 var diversityInput = document.getElementById('diversity');
 diversityInput.onchange = function() {
   diversity = this.value;
-  updateattributes({diversity: diversity});
+  updateDiversity(diversity);
   console.log(diversity);
 }
 var racismInput = document.getElementById('racism');
 racismInput.onchange = function() {
   racism = this.value / 5;
-  updateattributes({racism: racism});
+  updateRacism(racism);
   console.log(racism);
 }
 var introversionInput = document.getElementById('introversion');
 introversionInput.onchange = function() {
   introversion = this.value / 10;
-  updateattributes({introversion: introversion});
-  console.log(introversion);
+  updateIntroversion(introversion);
 }
 var speedInput = document.getElementById('speed');
 speedInput.onchange = function() {
   quickness = this.value / 10 + .5;
-  updateattributes({quickness: quickness});
-  console.log(quickness);
+  updateQuickness(quickness);
+}
+
+function updateDiversity(value) {
+  console.log('updateDiversity');
+  for (var i=0; i<boids.length; i++) {
+    boids[i].color = colors[ i % value ];
+  }
+}
+
+function updateQuickness(value) {
+  console.log('updateQuickness');
+  for (var i=0; i<boids.length; i++) {
+    boids[i].quickness = value * boids[i].quicknessCoefficient;
+    boids[i].maxSpeed = speedIndex * boids[i].quickness;
+  }
+}
+
+function updateIntroversion(value) {
+  console.log('updateIntroversion');
+  for (var i=0; i<boids.length; i++) {
+    boids[i].introversion = value * boids[i].introversionCoefficient;
+  }
+}
+
+function updateRacism(value) {
+  console.log('updateRacism');
+  for (var i=0; i<boids.length; i++) {
+    boids[i].racism = value * boids[i].racismCoefficient;
+  }
 }
