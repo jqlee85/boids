@@ -35,23 +35,44 @@ var colors = [
 var diversity = 8;
 if (firefox) maxBoids = 250;
 else maxBoids = 500;
+var minBoids = 250;
 var numBoids = Math.sqrt(canvas.width * canvas.height) / 2;
-if ( numBoids > maxBoids ) numBoids = maxBoids;
-var radius = 5;
+if ( numBoids > maxBoids ) {
+  numBoids = maxBoids;
+} else if ( numBoids < minBoids ) {
+  numBoids = minBoids;
+}
+// numBoids = 10;
+var radius;
+if ( size.width / 288 > 5 ) {
+  radius = 5;
+} else if ( size.width / 288 < 3) {
+  radius = 3;
+} else {
+  radius = size.width / 288;
+}
 var quickness = 1;
 var introversion = .5;
 var racism = 0;
-var speedIndex = 8;
+var speedIndex;
+if ( size.width / 180 < 5 ) {
+  speedIndex = 5;
+} else if ( size.width / 180 > 8 ) {
+  speedIndex = 8;
+} else {
+  speedIndex = size.width / 180;
+}
+
 
 // Mouse
 var mouse = {
-  location: new Victor( innerWidth / 2, innerHeight / 2 )
+  position: new Victor( innerWidth / 2, innerHeight / 2 )
 };
 
 // Event Listeners
 addEventListener('mousemove', function(event){
-	mouse.location.x = event.clientX;
-	mouse.location.y = event.clientY;
+	mouse.position.x = event.clientX;
+	mouse.position.y = event.clientY;
 });
 
 addEventListener('resize', function(){

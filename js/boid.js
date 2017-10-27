@@ -4,7 +4,7 @@ class Boid {
 
     // Initial Properties
     this.id = boid.id;
-    this.location = new Victor( boid.x, boid.y );
+    this.position = new Victor( boid.x, boid.y );
     var radiusCoefficients = [.5,.6,.7,.8,1];
     this.radiusCoefficient = Math.floor(Math.random() * radiusCoefficients.length);
     this.radius = boid.radius * radiusCoefficients[ this.radiusCoefficient ];
@@ -30,8 +30,8 @@ class Boid {
 
   // Arrival behavior to control boids arriving at their target
   seek( target ){
-    var targetLocation = target.clone();
-    var diff = targetLocation.subtract(this.location);
+    var targetposition = target.clone();
+    var diff = targetposition.subtract(this.position);
     var desired = new Victor(diff.x,diff.y);
 
     if (target.radius) {
@@ -66,10 +66,10 @@ class Boid {
         var racismMultiplier = 0;
       }
       var desiredSeparation = this.radius + boids[j].radius + ( 25 * this.introversion ) + ( 50 * racismMultiplier );
-      var sep = this.location.clone().distance(boids[j].location);
+      var sep = this.position.clone().distance(boids[j].position);
       if ( (sep > 0) && (sep < desiredSeparation) ) {
-        var thisLocation = this.location.clone();
-        var diff = thisLocation.subtract(boids[j].location);
+        var thisposition = this.position.clone();
+        var diff = thisposition.subtract(boids[j].position);
         diff.normalize();
         diff.divide({x:sep,y:sep});
         sum.add(diff);
@@ -92,7 +92,7 @@ class Boid {
     var steer = new Victor();
     var count = 0;
     for (var i = 0; i < boids.length; i++) {
-      var dist = this.location.distance(boids[i].location);
+      var dist = this.position.distance(boids[i].position);
       if ( dist > 0 && dist < neighborDist ) {
         sum.add(boids[i].velocity);
         count++;
@@ -115,9 +115,9 @@ class Boid {
     var sum = new Victor();
     var count = 0;
     for (var i = 0; i < boids.length; i++) {
-      var dist = this.location.distance(boids[i].location);
+      var dist = this.position.distance(boids[i].position);
       if ( dist > 0 && dist < neighborDist ) {
-        sum.add(boids[i].location);
+        sum.add(boids[i].position);
         count++;
       }
     }
@@ -133,7 +133,7 @@ class Boid {
 
     // Get Forces
     var alignForce = this.align(boids);
-    if (mouseSeek) var mouseForce = this.seek(mouse.location);
+    if (mouseSeek) var mouseForce = this.seek(mouse.position);
     var separateForce = this.separate(boids);
     var cohesionForce = this.cohesion(boids);
 
@@ -164,8 +164,8 @@ class Boid {
     // Loop through behaviors to apply forces
     this.flock();
 
-    // Update location
-    this.location = this.location.add(this.velocity);
+    // Update position
+    this.position = this.position.add(this.velocity);
 
     // Stricter collision detection if enabled
     if ( collisions ) { this.detectCollision(); }
@@ -186,29 +186,29 @@ class Boid {
 
   // Check for agents passing borders and wrap to other side
   borderWrap() {
-    if (this.location.x < 0) {
-      this.location.x = document.body.clientWidth;
-    } else if ( this.location.x > document.body.clientWidth ) {
-      this.location.x = 0;
+    if (this.position.x < 0) {
+      this.position.x = document.body.clientWidth;
+    } else if ( this.position.x > document.body.clientWidth ) {
+      this.position.x = 0;
     }
-    if (this.location.y < 0) {
-      this.location.y = document.body.clientHeight;
-    } else if ( this.location.y > document.body.clientHeight ) {
-      this.location.y = 0;
+    if (this.position.y < 0) {
+      this.position.y = document.body.clientHeight;
+    } else if ( this.position.y > document.body.clientHeight ) {
+      this.position.y = 0;
     }
   }
 
   // Detect a wall hit and bounce back if necessary
   wallBounce() {
-    if (this.location.x < this.radius) {
-      this.location.x = this.radius;
-    } else if ( this.location.x > document.body.clientWidth - this.radius) {
-      this.location.x = document.body.clientWidth - this.radius;
+    if (this.position.x <= this.radius) {
+      this.position.x = this.radius;
+    } else if ( this.position.x >= document.body.clientWidth - this.radius) {
+      this.position.x = document.body.clientWidth - this.radius;
     }
-    if (this.location.y < this.radius) {
-      this.location.y = this.radius;
-    } else if ( this.location.y > document.body.clientHeight - this.radius ) {
-      this.location.y = document.body.clientHeight - this.radius;
+    if (this.position.y <= this.radius) {
+      this.position.y = this.radius;
+    } else if ( this.position.y >= document.body.clientHeight - this.radius ) {
+      this.position.y = document.body.clientHeight - this.radius;
     }
     if ( this.distanceFromHorWall() <= this.radius  ) {
       this.velocity.invertY();
@@ -220,25 +220,25 @@ class Boid {
 
   distanceFromVertWall() {
     if (this.velocity.x > 0) {
-      return document.body.clientWidth - ( this.location.x );
+      return document.body.clientWidth - ( this.position.x );
     } else {
-      return this.location.x;
+      return this.position.x;
     }
 
   }
 
   distanceFromHorWall() {
     if (this.velocity.y > 0) {
-      return document.body.clientHeight - ( this.location.y );
+      return document.body.clientHeight - ( this.position.y );
     } else {
-      return this.location.y;
+      return this.position.y;
     }
   }
 
   // Draw Boid to screen
   draw(){
     c.beginPath();
-    c.arc(this.location.x, this.location.y, this.radius, 0, Math.PI * 2, false);
+    c.arc(this.position.x, this.position.y, this.radius, 0, Math.PI * 2, false);
     c.fillStyle = this.color;
     c.fill();
     c.closePath();
@@ -257,7 +257,7 @@ class Boid {
 
     for (var i = 0; i < boids.length; i++) {
       if ( this === boids[i] ) { continue; }
-      if ( getDistance( this.location.x, this.location.y, boids[i].location.x, boids[i].location.y) - ( this.radius + boids[i].radius ) < 0 ) {
+      if ( getDistance( this.position.x, this.position.y, boids[i].position.x, boids[i].position.y) - ( this.radius + boids[i].radius ) < 0 ) {
         this.resolveCollision( this, boids[i]);
       }
     }
@@ -289,18 +289,18 @@ class Boid {
  * @return Null | Does not return a value
  */
  resolveCollision(particle, otherParticle) {
-    
+
     var xVelocityDiff = particle.velocity.x - otherParticle.velocity.x;
     var yVelocityDiff = particle.velocity.y - otherParticle.velocity.y;
 
-    var xDist = otherParticle.location.x - particle.location.x;
-    var yDist = otherParticle.location.y - particle.location.y;
+    var xDist = otherParticle.position.x - particle.position.x;
+    var yDist = otherParticle.position.y - particle.position.y;
 
     // Prevent accidental overlap of particles
     if ( xVelocityDiff * xDist + yVelocityDiff * yDist >= 0 ) {
 
       // Grab angle between the two colliding particles
-      var angle = -Math.atan2(otherParticle.location.y - particle.location.y, otherParticle.location.x - particle.location.x);
+      var angle = -Math.atan2(otherParticle.position.y - particle.position.y, otherParticle.position.x - particle.position.x);
 
       // Store mass in var for better readability in collision equation
       var m1 = particle.mass;
@@ -314,7 +314,7 @@ class Boid {
       var v1 = { x: u1.x * (m1 - m2) / (m1 + m2) + u2.x * 2 * m2 / (m1 + m2), y: u1.y };
       var v2 = { x: u2.x * (m1 - m2) / (m1 + m2) + u1.x * 2 * m2 / (m1 + m2), y: u2.y };
 
-      // Final velocity after rotating axis back to original location
+      // Final velocity after rotating axis back to original position
       var vFinal1 = this.rotate(v1, -angle);
       var vFinal2 = this.rotate(v2, -angle);
 

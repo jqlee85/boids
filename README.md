@@ -2,6 +2,6 @@
 Implementation of Boids on JS Canvas
 
 ## To Do
-Make speedIndex and radius based on the window's width (don't worry about height)
+Add wallBounce() force to flock() and use applyForce() for it
 
 Format functions, add documentation
