@@ -203,12 +203,16 @@ input::-moz-focus-inner {
 .boids-control-checkbox label:hover::after {
   opacity: 0.3;
 }
+.boids-control input[type=range], .boids-control-checkbox label {
+  cursor: pointer;
+}
 .boids-control-checkbox input[type=checkbox] {
   height: 0px;
   width: 15px;
   margin: 0 !important;
   visibility: hidden;
   z-index: 10;
+  cursor: pointer;
 }
 .boids-control-checkbox input[type=checkbox]:checked + label:after {
   opacity: 1;
@@ -220,22 +224,48 @@ input::-moz-focus-inner {
   bottom: 0;
   font-size: 14px;
   color: #fafafa;
-  color: rgba(255,255,255,.8);
+  color: rgba(255,255,255,.6);
   padding: 5px;
 }
-
+#mobile-boids-controls {
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+#mobile-boids-controls button {
+  background: none;
+  margin: 8px 3px 0px;
+  color: #fafafa;
+  color: rgba(255,255,255,.8);
+  border: 1px solid rgba(255,255,255,.8);
+  border-radius: 0;
+  cursor: pointer;
+  text-align: center;
+}
+#mobile-boids-controls button:focus {
+  outline:0;
+}
+#mobile-boids-controls button.boids-checkbox-on {
+  background-color: #fafafa;
+  background-color: rgba(255,255,255,.8);
+  color: #000;
+}
 @media screen and (max-width: 1000px) {
   #boids-controls-container {
-    display: block;
+    padding: 16px 0;
   }
   .boids-control {
+    position: absolute;
+    top: 100%;
     display: none;
   }
   #mobile-boids-controls {
     display: block;
   }
   #fps {
-    font-size: 12px;
+    font-size: 10px;
+    padding: 3px;
   }
 }
 @media screen and (min-width: 1001px) {

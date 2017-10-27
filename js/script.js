@@ -232,10 +232,27 @@ mouseSeekInput.checked = false;
 mouseSeekInput.onclick = function() {
   if ( !this.checked ) {
     this.checked = false;
+    mouseSeekMobile.dataset.checked = false;
     mouseSeek = false;
   } else {
     this.checked = true;
+    mouseSeekMobile.dataset.checked = true;
     mouseSeek = true;
+  }
+}
+var mouseSeekMobile = document.getElementById('mouse-seek-mobile');
+mouseSeekMobile.dataset.checked = false;
+mouseSeekMobile.onclick = function() {
+  if ( this.dataset.checked == 'false') {
+    this.dataset.checked = true;
+    mouseSeekInput.checked = true;
+    this.classList.toggle('boids-checkbox-on');
+    mouseSeek = true;
+  } else {
+    this.dataset.checked = false;
+    mouseSeekInput.checked = false;
+    this.classList.toggle('boids-checkbox-on');
+    mouseSeek = false;
   }
 }
 var rangeInputs = document.getElementsByClassName('input-range');
@@ -259,6 +276,8 @@ speedInput.onchange = function() {
   quickness = this.value / 10 + .5;
   updateQuickness(quickness);
 }
+
+
 
 function updateDiversity(value) {
   for (var i=0; i<boids.length; i++) {

@@ -16,9 +16,12 @@
 		<div id="boids-controls-container">
 			<div id="mobile-boids-controls">
 				<button id="introversion-mobile">Introversion</button>
-				<button id="introversion-mobile">Speed</button>
-				<button id="introversion-mobile">Racism</button>
-				<button id="introversion-mobile">Diversity</button>
+				<button id="speed-mobile">Speed</button>
+				<button id="walls-mobile" class="boids-checkbox-on">Walls</button>
+				<button id="collisions-mobile">Collisions</button>
+				<button id="mouse-seek-mobile">Seek Mouse</button>
+				<button id="racism-mobile">Racism</button>
+				<button id="diversity-mobile">Diversity</button>
 			</div>
 			<div class="boids-control boids-control-range">
 				<div class="range-slider">
