@@ -151,7 +151,7 @@ class Boid {
     if ( mouseSeek ) var mouseWeight = .2;
     var separateWeight = 1;
     var cohesionWeight = 1;
-    if ( walls ) var avoidWallsWeight = 1;
+    if ( walls ) var avoidWallsWeight = 1.2;
 
 
     // Apply forces
@@ -301,7 +301,7 @@ class Boid {
  * @return Null | Does not return a value
  */
  resolveCollision(particle, otherParticle) {
-   
+
     var xVelocityDiff = particle.velocity.x - otherParticle.velocity.x;
     var yVelocityDiff = particle.velocity.y - otherParticle.velocity.y;
 

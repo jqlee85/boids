@@ -14,6 +14,12 @@
   <div id="boids-wrapper">
     <canvas id="boids"></canvas>
 		<div id="boids-controls-container">
+			<div id="mobile-boids-controls">
+				<button id="introversion-mobile">Introversion</button>
+				<button id="introversion-mobile">Speed</button>
+				<button id="introversion-mobile">Racism</button>
+				<button id="introversion-mobile">Diversity</button>
+			</div>
 			<div class="boids-control boids-control-range">
 				<div class="range-slider">
 					<label for="introversion"><p>Introversion</p></label>
