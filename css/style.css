@@ -251,14 +251,38 @@ input::-moz-focus-inner {
   background-color: rgba(255,255,255,.8);
   color: #000;
 }
+.boids-control-close {
+  display: none;
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  top: 0;
+  right: 20px;
+  color: #fafafa;
+  color: rgba(255,255,255,.8);
+  cursor: pointer;
+}
 @media screen and (max-width: 1000px) {
   #boids-controls-container {
     padding: 16px 0;
   }
   .boids-control {
-    position: absolute;
-    top: 100%;
     display: none;
+    position: absolute;
+    background: rgba(34,34,34,.8);
+    width: 100%;
+    padding: 20px 0px;
+    top: 100%;
+
+  }
+  .boids-control.show {
+    display: block;
+    top: auto;
+    bottom: 0px;
+    transition: top 2s ease-in-out;
+  }
+  .boids-control-close {
+    display: inline-block;
   }
   #mobile-boids-controls {
     display: block;

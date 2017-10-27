@@ -23,14 +23,16 @@
 				<button id="racism-mobile">Racism</button>
 				<button id="diversity-mobile">Diversity</button>
 			</div>
-			<div class="boids-control boids-control-range">
+			<div id="introversion-control-container" class="boids-control boids-control-range">
+				<div class="boids-control-close">X</div>
 				<div class="range-slider">
 					<label for="introversion"><p>Introversion</p></label>
 					<input class="input-range" type="range" step="1" value="5" min="0" max="10" name="introversion" id="introversion">
 			    <span class="range-value"></span>
 				</div>
 			</div>
-			<div class="boids-control boids-control-range">
+			<div id="speed-control-container" class="boids-control boids-control-range">
+				<div class="boids-control-close">X</div>
 				<div class="range-slider">
 					<label for="introversion"><p>Speed</p></label>
 					<input class="input-range" type="range" step="1" value="5" min="0" max="10" name="speed" id="speed">
@@ -58,14 +60,16 @@
 					<label for="mouse-seek"></label>
 				</div>
 			</div>
-			<div class="boids-control boids-control-range">
+			<div id="racism-control-container" class="boids-control boids-control-range">
+				<div class="boids-control-close">X</div>
 				<div class="range-slider">
 					<label for="introversion"><p>Racism</p></label>
 					<input class="input-range" type="range" step="1" value="0" min="0" max="10" name="racism" id="racism">
 			    <span class="range-value"></span>
 				</div>
 			</div>
-			<div class="boids-control boids-control-range">
+			<div id="diversity-control-container" class="boids-control boids-control-range">
+				<div class="boids-control-close">X</div>
 				<div class="range-slider">
 					<label for="introversion"><p>Diversity</p></label>
 					<input class="input-range" type="range" step="1" value="8" min="1" max="8" name="diversity" id="diversity">

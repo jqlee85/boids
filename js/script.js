@@ -296,25 +296,56 @@ mouseSeekMobile.onclick = function() {
   }
 }
 var rangeInputs = document.getElementsByClassName('input-range');
+var mobileClosers = document.getElementsByClassName('boids-control-close');
+for (var i = 0; i < mobileClosers.length; i++) {
+  mobileClosers[i].onclick = function() {
+    console.log('close');
+  }
+}
+
+var diversityControlContainer = document.getElementById('diversity-control-container');
 var diversityInput = document.getElementById('diversity');
 diversityInput.onchange = function() {
   diversity = this.value;
   updateDiversity(diversity);
 }
+var diversityMobile = document.getElementById('diversity-mobile');
+diversityMobile.onclick = function() {
+  console.log('hey');
+  diversityControlContainer.classList.toggle('show');
+}
+var racismControlContainer = document.getElementById('racism-control-container');
 var racismInput = document.getElementById('racism');
 racismInput.onchange = function() {
   racism = this.value / 5;
   updateRacism(racism);
 }
+var racismMobile = document.getElementById('racism-mobile');
+racismMobile.onclick = function() {
+  console.log('hey');
+  racismControlContainer.classList.toggle('show');
+}
+var introversionControlContainer = document.getElementById('introversion-control-container');
 var introversionInput = document.getElementById('introversion');
 introversionInput.onchange = function() {
   introversion = this.value / 10;
   updateIntroversion(introversion);
 }
+var introversionMobile = document.getElementById('introversion-mobile');
+introversionMobile.onclick = function() {
+  console.log('hey');
+  introversionControlContainer.classList.toggle('show');
+}
+var speedControlContainer = document.getElementById('speed-control-container');
 var speedInput = document.getElementById('speed');
 speedInput.onchange = function() {
   quickness = this.value / 10 + .5;
   updateQuickness(quickness);
+}
+var speedMobile = document.getElementById('speed-mobile');
+speedMobile.onclick = function() {
+  console.log('hey');
+  speedControlContainer.classList.toggle('show');
 }
 
 
