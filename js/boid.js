@@ -5,15 +5,10 @@ class Boid {
     // Initial Properties
     this.id = boid.id;
     this.position = new Victor( boid.x, boid.y );
-    var radiusCoefficients = [.5,.6,.7,.8,1];
-    this.radiusCoefficient = Math.floor(Math.random() * radiusCoefficients.length);
-    this.radius = boid.radius * radiusCoefficients[ this.radiusCoefficient ];
-    this.introversionCoefficient = getRandomInt(20,80) / 100;
-    this.introversion = boid.introversion * this.introversionCoefficient;
-    this.quicknessCoefficient = getRandomInt(50,100) / 100;
-    this.quickness = boid.quickness * this.quicknessCoefficient;
-    this.racismCoefficient = getRandomInt(20,80) / 100;
-    this.racism = boid.racism * this.racismCoefficient;
+    this.radius = boid.radius * radiusCoefficients[ boid.radiusCoefficient ];
+    this.introversion = boid.introversion * boid.introversionCoefficient;
+    this.quickness = boid.quickness * boid.quicknessCoefficient;
+    this.racism = boid.racism * boid.racismCoefficient;
     this.color = boid.color;
     this.mass = (4/3) * Math.PI * Math.pow( this.radius,3 );
 

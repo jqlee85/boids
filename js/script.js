@@ -53,6 +53,7 @@ if ( size.width / 288 > 5 ) {
 } else {
   radius = size.width / 288;
 }
+var radiusCoefficients = [.5,.6,.7,.8,1];
 var quickness = 1;
 var introversion = .5;
 var racism = 0;
@@ -95,6 +96,12 @@ function init() {
   // Instantiate all Boids
   for ( i = 0; i < numBoids; i++ ) {
 
+    // Generate introversion coefficient
+    var introversionCoefficient = getRandomInt(20,80) / 100;
+    var quicknessCoefficient = getRandomInt(50,100) / 100;
+    var racismCoefficient = getRandomInt(20,80) / 100;
+    var radiusCoefficient = Math.floor(Math.random() * radiusCoefficients.length);
+
     // Generate random coords
     var x = Math.ceil(Math.random()* ( size.width - ( radius * 2 ) ) ) + ( radius );
     var y = Math.ceil(Math.random()* ( size.height - ( radius * 2 ) ) ) + ( radius );
@@ -109,17 +116,21 @@ function init() {
       }
     }
 
-
+    // Add new Boid to array
     boids.push( new Boid( {
       id: i,
       x: x,
       y: y,
       speedIndex: speedIndex,
       radius: radius,
+      radiusCoefficient: radiusCoefficient,
       quickness: quickness,
+      quicknessCoefficient: quicknessCoefficient,
       color: randomColor(colors),
       racism: racism,
-      introversion: introversion
+      racismCoefficient: racismCoefficient,
+      introversion: introversion,
+      introversionCoefficient: introversionCoefficient
     } ) );
   }
 
@@ -299,10 +310,9 @@ var rangeInputs = document.getElementsByClassName('input-range');
 var mobileClosers = document.getElementsByClassName('boids-control-close');
 for (var i = 0; i < mobileClosers.length; i++) {
   mobileClosers[i].onclick = function() {
-    console.log('close');
+    this.parentNode.classList.toggle('show');
   }
 }
-
 var diversityControlContainer = document.getElementById('diversity-control-container');
 var diversityInput = document.getElementById('diversity');
 diversityInput.onchange = function() {
@@ -311,7 +321,6 @@ diversityInput.onchange = function() {
 }
 var diversityMobile = document.getElementById('diversity-mobile');
 diversityMobile.onclick = function() {
-  console.log('hey');
   diversityControlContainer.classList.toggle('show');
 }
 var racismControlContainer = document.getElementById('racism-control-container');
@@ -322,7 +331,6 @@ racismInput.onchange = function() {
 }
 var racismMobile = document.getElementById('racism-mobile');
 racismMobile.onclick = function() {
-  console.log('hey');
   racismControlContainer.classList.toggle('show');
 }
 var introversionControlContainer = document.getElementById('introversion-control-container');
@@ -333,7 +341,6 @@ introversionInput.onchange = function() {
 }
 var introversionMobile = document.getElementById('introversion-mobile');
 introversionMobile.onclick = function() {
-  console.log('hey');
   introversionControlContainer.classList.toggle('show');
 }
 var speedControlContainer = document.getElementById('speed-control-container');
@@ -344,7 +351,6 @@ speedInput.onchange = function() {
 }
 var speedMobile = document.getElementById('speed-mobile');
 speedMobile.onclick = function() {
-  console.log('hey');
   speedControlContainer.classList.toggle('show');
 }
 
