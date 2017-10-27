@@ -129,25 +129,37 @@ class Boid {
     }
   }
 
+  avoidWalls() {
+
+    if ( this.distanceFromHorWall() < this.radius * 10 || this.distanceFromVertWall() < this.radius * 10 ) {
+      return this.seek(center);
+    } else { return false; }
+
+  }
+
   flock() {
 
     // Get Forces
     var alignForce = this.align(boids);
-    if (mouseSeek) var mouseForce = this.seek(mouse.position);
+    if ( mouseSeek ) var mouseForce = this.seek(mouse.position);
     var separateForce = this.separate(boids);
     var cohesionForce = this.cohesion(boids);
+    if ( walls ) var avoidWallsForce = this.avoidWalls();
 
     // Weight Forces
     var alignWeight = 1.2;
+    if ( mouseSeek ) var mouseWeight = .2;
     var separateWeight = 1;
     var cohesionWeight = 1;
-    if (mouseSeek) var mouseWeight = .2;
+    if ( walls ) var avoidWallsWeight = 1;
+
 
     // Apply forces
     this.applyForce( alignForce, alignWeight );
-    if (mouseSeek) this.applyForce( mouseForce, mouseWeight );
+    if ( mouseSeek ) this.applyForce( mouseForce, mouseWeight );
     this.applyForce( separateForce, separateWeight );
     this.applyForce( cohesionForce, cohesionWeight );
+    if ( walls && avoidWallsForce ) this.applyForce( avoidWallsForce, avoidWallsWeight );
 
   }
 
@@ -289,7 +301,7 @@ class Boid {
  * @return Null | Does not return a value
  */
  resolveCollision(particle, otherParticle) {
-
+   console.log('resolving '+particle.id + ' and '+otherParticle.id);
     var xVelocityDiff = particle.velocity.x - otherParticle.velocity.x;
     var yVelocityDiff = particle.velocity.y - otherParticle.velocity.y;
 

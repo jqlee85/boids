@@ -15,6 +15,8 @@ var size = {
 }
 canvas.width = size.width;
 canvas.height = size.height;
+var center = new Victor( size.width / 2 ,size.height / 2 );
+
 
 // Checkbox Options
 var walls = true;
@@ -80,6 +82,8 @@ addEventListener('resize', function(){
   size.height = innerHeight;
   canvas.width = innerWidth;
 	canvas.height = innerHeight;
+  center.x = size.width/ 2;
+  center.y = size.height / 2;
 });
 
 // Create Boids Array
