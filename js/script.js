@@ -205,15 +205,34 @@ Victor.prototype.limitMagnitude = function (max) {
 };
 
 // Inputs
-var wallInput = document.getElementById('walls');
-wallInput.checked = true;
-wallInput.onclick = function() {
+var wallsInput = document.getElementById('walls');
+wallsInput.checked = true;
+wallsInput.onclick = function() {
   if ( !this.checked ) {
     this.checked = false;
+    wallsMobile.dataset.checked = false;
+    wallsMobile.classList.toggle('boids-checkbox-on');
     walls = false;
   } else {
     this.checked = true;
+    wallsMobile.dataset.checked = true;
+    wallsMobile.classList.toggle('boids-checkbox-on');
     walls = true;
+  }
+}
+var wallsMobile = document.getElementById('walls-mobile');
+wallsMobile.dataset.checked = true;
+wallsMobile.onclick = function() {
+  if ( this.dataset.checked == 'false') {
+    this.dataset.checked = true;
+    wallsInput.checked = true;
+    this.classList.toggle('boids-checkbox-on');
+    walls = true;
+  } else {
+    this.dataset.checked = false;
+    wallsInput.checked = false;
+    this.classList.toggle('boids-checkbox-on');
+    walls = false;
   }
 }
 var collisionDetectionInput = document.getElementById('collision-detection');
@@ -221,10 +240,29 @@ collisionDetectionInput.checked = false;
 collisionDetectionInput.onclick = function() {
   if ( !this.checked ) {
     this.checked = false;
+    collisionDetectionMobile.dataset.checked = false;
+    collisionDetectionMobile.classList.toggle('boids-checkbox-on');
     collisions = false;
   } else {
     this.checked = true;
+    collisionDetectionMobile.dataset.checked = true;
+    collisionDetectionMobile.classList.toggle('boids-checkbox-on');
     collisions = true;
+  }
+}
+var collisionDetectionMobile = document.getElementById('collisions-mobile');
+collisionDetectionMobile.dataset.checked = false;
+collisionDetectionMobile.onclick = function() {
+  if ( this.dataset.checked == 'false') {
+    this.dataset.checked = true;
+    collisionDetectionInput.checked = true;
+    this.classList.toggle('boids-checkbox-on');
+    collisions = true;
+  } else {
+    this.dataset.checked = false;
+    collisionDetectionInput.checked = false;
+    this.classList.toggle('boids-checkbox-on');
+    collisions = false;
   }
 }
 var mouseSeekInput = document.getElementById('mouse-seek');
@@ -233,10 +271,12 @@ mouseSeekInput.onclick = function() {
   if ( !this.checked ) {
     this.checked = false;
     mouseSeekMobile.dataset.checked = false;
+    mouseSeekMobile.classList.toggle('boids-checkbox-on');
     mouseSeek = false;
   } else {
     this.checked = true;
     mouseSeekMobile.dataset.checked = true;
+    mouseSeekMobile.classList.toggle('boids-checkbox-on');
     mouseSeek = true;
   }
 }
