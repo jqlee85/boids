@@ -1,3 +1,5 @@
+/*---- Global Setup ----*/
+
 // Set up canvas
 const canvas = document.getElementById('boids');
 const c = canvas.getContext('2d');
@@ -17,6 +19,76 @@ canvas.width = size.width;
 canvas.height = size.height;
 var center = new Victor( size.width / 2 ,size.height / 2 );
 
+// Initialize Mouse
+var mouse = {
+  position: new Victor( innerWidth / 2, innerHeight / 2 )
+};
+
+/*---- end Global Setup ----*/
+
+/*---- Helper Functions ----*/
+
+function getRandomInt(min, max) {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+function getDistance(x1, y1, x2, y2) {
+  var xDist = x2 - x1;
+  var yDist = y2 - y1;
+  return Math.sqrt( Math.pow(xDist, 2) + Math.pow(yDist, 2) );
+}
+
+function randomColor(colors) {
+  return colors[ Math.floor( Math.random() * colors.length) ];
+}
+
+// Get coefficients based on normal distribution around 50 with SD 9
+function gaussian(mean, stdev) {
+    var y2;
+    var use_last = false;
+    return function() {
+        var y1;
+        if(use_last) {
+           y1 = y2;
+           use_last = false;
+        }
+        else {
+            var x1, x2, w;
+            do {
+                 x1 = 2.0 * Math.random() - 1.0;
+                 x2 = 2.0 * Math.random() - 1.0;
+                 w  = x1 * x1 + x2 * x2;
+            } while( w >= 1.0);
+            w = Math.sqrt((-2.0 * Math.log(w))/w);
+            y1 = x1 * w;
+            y2 = x2 * w;
+            use_last = true;
+       }
+
+       var retval = mean + stdev * y1;
+       if(retval > 0)
+           return retval;
+       return -retval;
+   }
+}
+var getCoefficient = gaussian(50, 9);
+var getQuicknessCoefficient = gaussian(75,7.5);
+
+// Add Limit Magnitude function to Victor objects
+Victor.prototype.limitMagnitude = function (max) {
+
+  if (this.length() > max) {
+    this.normalize();
+    this.multiply({x:max,y:max});
+  } else {
+    return false;
+  }
+
+};
+
+/*--- end Helper Functions ----*/
+
+/*---- Loop and Initializing ----*/
 
 // Checkbox Options
 var walls = true;
@@ -58,34 +130,13 @@ var quickness = 1;
 var introversion = .5;
 var racism = 0;
 var speedIndex;
-if ( size.width / 180 < 5 ) {
+if ( size.width / 160 < 5 ) {
   speedIndex = 5;
 } else if ( size.width / 180 > 8 ) {
-  speedIndex = 8;
+  speedIndex = 9;
 } else {
   speedIndex = size.width / 180;
 }
-
-
-// Mouse
-var mouse = {
-  position: new Victor( innerWidth / 2, innerHeight / 2 )
-};
-
-// Event Listeners
-addEventListener('mousemove', function(event){
-	mouse.position.x = event.clientX;
-	mouse.position.y = event.clientY;
-});
-
-addEventListener('resize', function(){
-  size.width = innerWidth;
-  size.height = innerHeight;
-  canvas.width = innerWidth;
-	canvas.height = innerHeight;
-  center.x = size.width/ 2;
-  center.y = size.height / 2;
-});
 
 // Create Boids Array
 var boids = [];
@@ -97,9 +148,9 @@ function init() {
   for ( i = 0; i < numBoids; i++ ) {
 
     // Generate introversion coefficient
-    var introversionCoefficient = getRandomInt(20,80) / 100;
-    var quicknessCoefficient = getRandomInt(50,100) / 100;
-    var racismCoefficient = getRandomInt(20,80) / 100;
+    var introversionCoefficient = getCoefficient() / 100;
+    var quicknessCoefficient = getQuicknessCoefficient() / 100;
+    var racismCoefficient = getCoefficient() / 100;
     var radiusCoefficient = Math.floor(Math.random() * radiusCoefficients.length);
 
     // Generate random coords
@@ -136,22 +187,7 @@ function init() {
 
 }
 
-// Helpers
-function getRandomInt(min, max) {
-  return Math.floor(Math.random() * (max - min + 1)) + min;
-}
-
-function getDistance(x1, y1, x2, y2) {
-  var xDist = x2 - x1;
-  var yDist = y2 - y1;
-  return Math.sqrt( Math.pow(xDist, 2) + Math.pow(yDist, 2) );
-}
-
-function randomColor(colors) {
-  return colors[ Math.floor( Math.random() * colors.length) ];
-}
-
-// Animation Loop
+// Animate
 function animate() {
 	requestAnimationFrame(animate);
 
@@ -166,26 +202,21 @@ function animate() {
     fpsReport = 0;
   }
 
-
   // If enough time has elapsed, draw the next frame
   if (elapsed > fpsInterval) {
-
       // Get ready for next frame by setting then=now, but also adjust for your
       // specified fpsInterval not being a multiple of RAF's interval (16.7ms)
       then = now - (elapsed % fpsInterval);
-
       // Drawing Code
       c.clearRect(0, 0, canvas.width, canvas.height);
-
       // Update all boids
       for (var i = 0; i < boids.length; i++ ) {
         boids[i].update();
       }
-
   }
-
 }
 
+// Setup animation
 var stop = false;
 var frameCount = 0;
 var fps, fpsInterval, startTime, now, then, elapsed;
@@ -201,21 +232,41 @@ function startAnimating() {
   animate();
 }
 
+//Initalize program
 init();
 startAnimating(60);
 
-Victor.prototype.limitMagnitude = function (max) {
+/*---- end Loop and Initializing ----*/
 
-  if (this.length() > max) {
-    this.normalize();
-    this.multiply({x:max,y:max});
-  } else {
-    return false;
+/*---- Event Listeners ----*/
+
+addEventListener('mousemove', function(event){
+	mouse.position.x = event.clientX;
+	mouse.position.y = event.clientY;
+});
+
+addEventListener('resize', function(){
+  size.width = innerWidth;
+  size.height = innerHeight;
+  canvas.width = innerWidth;
+	canvas.height = innerHeight;
+  center.x = size.width/ 2;
+  center.y = size.height / 2;
+});
+
+/*---- end Event Listeners ----*/
+
+/*---- Inputs ----*/
+
+// Mobile Closers
+var mobileClosers = document.getElementsByClassName('boids-control-close');
+for (var i = 0; i < mobileClosers.length; i++) {
+  mobileClosers[i].onclick = function() {
+    this.parentNode.classList.toggle('show');
   }
+}
 
-};
-
-// Inputs
+// Walls
 var wallsInput = document.getElementById('walls');
 wallsInput.checked = true;
 wallsInput.onclick = function() {
@@ -246,6 +297,8 @@ wallsMobile.onclick = function() {
     walls = false;
   }
 }
+
+// Collision Detection
 var collisionDetectionInput = document.getElementById('collision-detection');
 collisionDetectionInput.checked = false;
 collisionDetectionInput.onclick = function() {
@@ -276,6 +329,8 @@ collisionDetectionMobile.onclick = function() {
     collisions = false;
   }
 }
+
+// Mouse Seek
 var mouseSeekInput = document.getElementById('mouse-seek');
 mouseSeekInput.checked = false;
 mouseSeekInput.onclick = function() {
@@ -306,33 +361,8 @@ mouseSeekMobile.onclick = function() {
     mouseSeek = false;
   }
 }
-var rangeInputs = document.getElementsByClassName('input-range');
-var mobileClosers = document.getElementsByClassName('boids-control-close');
-for (var i = 0; i < mobileClosers.length; i++) {
-  mobileClosers[i].onclick = function() {
-    this.parentNode.classList.toggle('show');
-  }
-}
-var diversityControlContainer = document.getElementById('diversity-control-container');
-var diversityInput = document.getElementById('diversity');
-diversityInput.onchange = function() {
-  diversity = this.value;
-  updateDiversity(diversity);
-}
-var diversityMobile = document.getElementById('diversity-mobile');
-diversityMobile.onclick = function() {
-  diversityControlContainer.classList.toggle('show');
-}
-var racismControlContainer = document.getElementById('racism-control-container');
-var racismInput = document.getElementById('racism');
-racismInput.onchange = function() {
-  racism = this.value / 5;
-  updateRacism(racism);
-}
-var racismMobile = document.getElementById('racism-mobile');
-racismMobile.onclick = function() {
-  racismControlContainer.classList.toggle('show');
-}
+
+// Introversion
 var introversionControlContainer = document.getElementById('introversion-control-container');
 var introversionInput = document.getElementById('introversion');
 introversionInput.onchange = function() {
@@ -343,6 +373,13 @@ var introversionMobile = document.getElementById('introversion-mobile');
 introversionMobile.onclick = function() {
   introversionControlContainer.classList.toggle('show');
 }
+function updateIntroversion(value) {
+  for (var i=0; i<boids.length; i++) {
+    boids[i].introversion = value * boids[i].introversionCoefficient;
+  }
+}
+
+// Speed
 var speedControlContainer = document.getElementById('speed-control-container');
 var speedInput = document.getElementById('speed');
 speedInput.onchange = function() {
@@ -353,15 +390,6 @@ var speedMobile = document.getElementById('speed-mobile');
 speedMobile.onclick = function() {
   speedControlContainer.classList.toggle('show');
 }
-
-
-
-function updateDiversity(value) {
-  for (var i=0; i<boids.length; i++) {
-    boids[i].color = colors[ i % value ];
-  }
-}
-
 function updateQuickness(value) {
   for (var i=0; i<boids.length; i++) {
     boids[i].quickness = value * boids[i].quicknessCoefficient;
@@ -369,14 +397,38 @@ function updateQuickness(value) {
   }
 }
 
-function updateIntroversion(value) {
-  for (var i=0; i<boids.length; i++) {
-    boids[i].introversion = value * boids[i].introversionCoefficient;
-  }
+// Racism
+var racismControlContainer = document.getElementById('racism-control-container');
+var racismInput = document.getElementById('racism');
+racismInput.onchange = function() {
+  racism = this.value / 5;
+  updateRacism(racism);
 }
-
+var racismMobile = document.getElementById('racism-mobile');
+racismMobile.onclick = function() {
+  racismControlContainer.classList.toggle('show');
+}
 function updateRacism(value) {
   for (var i=0; i<boids.length; i++) {
     boids[i].racism = value * boids[i].racismCoefficient;
   }
 }
+
+// Diversity
+var diversityControlContainer = document.getElementById('diversity-control-container');
+var diversityInput = document.getElementById('diversity');
+diversityInput.onchange = function() {
+  diversity = this.value;
+  updateDiversity(diversity);
+}
+var diversityMobile = document.getElementById('diversity-mobile');
+diversityMobile.onclick = function() {
+  diversityControlContainer.classList.toggle('show');
+}
+function updateDiversity(value) {
+  for (var i=0; i<boids.length; i++) {
+    boids[i].color = colors[ i % value ];
+  }
+}
+
+/*---- end Inputs ----*/

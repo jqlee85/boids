@@ -6,8 +6,11 @@ class Boid {
     this.id = boid.id;
     this.position = new Victor( boid.x, boid.y );
     this.radius = boid.radius * radiusCoefficients[ boid.radiusCoefficient ];
-    this.introversion = boid.introversion * boid.introversionCoefficient;
-    this.quickness = boid.quickness * boid.quicknessCoefficient;
+    this.introversionCoefficient = boid.introversionCoefficient;
+    this.introversion = boid.introversion * this.introversionCoefficient;
+    this.quicknessCoefficient = boid.quicknessCoefficient;
+    this.quickness = boid.quickness * this.quicknessCoefficient;
+    this.racismCoefficient = boid.racismCoefficient;
     this.racism = boid.racism * boid.racismCoefficient;
     this.color = boid.color;
     this.mass = (4/3) * Math.PI * Math.pow( this.radius,3 );
