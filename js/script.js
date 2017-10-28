@@ -1,3 +1,17 @@
+/*
+ *  JumpOff JavaScript Boids
+ *
+ *  Copyright 2017, JumpOff, LLC
+ *  Github:  https://github.com/jqlee85/boids
+ *  Author: JumpOff, LLC
+ *  Author URL: https://jumpoff.io
+ *
+ *  License: WTFPL license
+ *  License URL: http://sam.zoy.org/wtfpl/
+ *
+ *  Version: 1.0
+ */
+
 /*---- Global Setup ----*/
 
 // Set up canvas
