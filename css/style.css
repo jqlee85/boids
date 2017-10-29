@@ -272,6 +272,24 @@ input::-moz-focus-inner {
   color: rgba(255,255,255,.8);
   cursor: pointer;
 }
+#jumpoff-link {
+  position: absolute;
+  display: inline;
+  bottom: 0;
+  right: 0;
+  background: none;
+  padding: 5px;
+}
+#jumpoff-link a, #jumpoff-link a:visited {
+  font-size: 14px;
+  color: #fafafa;
+  color: rgba(255,255,255,.6);
+  text-decoration: none;
+  cursor: pointer;
+}
+#jumpoff-link a:hover {
+  color: #fff;
+}
 @media screen and (max-width: 1000px) {
   #boids-controls-container {
     padding: 16px 0;

@@ -81,6 +81,9 @@
 	<div id="fps">
 		<p><span id="fps-number"></span> fps</p>
 	</div>
+	<div id="jumpoff-link">
+		<a href="https://jumpoff.io">HOME</a>
+	</div>
 	<script src="js/victor.min.js"></script>
   <script src="js/boid.js"></script>
   <script src="js/script.js"></script>

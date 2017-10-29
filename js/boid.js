@@ -129,7 +129,7 @@ class Boid {
 
   avoidWalls() {
 
-    if ( this.distanceFromHorWall() < this.radius * 10 || this.distanceFromVertWall() < this.radius * 10 ) {
+    if ( this.distanceFromHorWall() < this.radius * 20 || this.distanceFromVertWall() < this.radius * 20 ) {
       return this.seek(center);
     } else { return false; }
 
