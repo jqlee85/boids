@@ -1,5 +1,11 @@
 class Boid {
 
+  /**
+   * Contstruct Boid object
+   *
+   * @param  object | boid | Initial setup properties for boid
+   *
+   */
   constructor(boid) {
 
     // Initial Properties
@@ -23,10 +29,14 @@ class Boid {
     //Force and Accel
     this.maxForce = .5;
 
-
   }
 
-  // Arrival behavior to control boids arriving at their target
+  /**
+   * Calculate the seek force for a boid and a target
+   *
+   * @param  Object | target | The Victor.js vector for a target's position
+   * @return Object | The seek force for the target as a vector
+   */
   seek( target ){
     var targetposition = target.clone();
     var diff = targetposition.subtract(this.position);
@@ -53,7 +63,12 @@ class Boid {
     return desired;
   }
 
-  // Separation Force
+  /**
+   * Calculate the separation force for a boid and its flock
+   *
+   * @param  Array | boids | The boids array containing all the boids
+   * @return Object | The Separation force as a Victor vector
+   */
   separate( boids ){
     var sum = new Victor();
     var count = 0;
@@ -84,6 +99,12 @@ class Boid {
     return sum;
   }
 
+  /**
+   * Calculate the alignment force for a boid and its flock
+   *
+   * @param  Array | boids | The boids array containing all the boids
+   * @return Object | The alignment force as a Victor vector
+   */
   align( boids ) {
     var neighborDist = 50;
     var sum = new Victor();
@@ -108,6 +129,12 @@ class Boid {
     }
   }
 
+  /**
+   * Calculate the cohesion force for a boid and its flock
+   *
+   * @param  Array | boids | The boids array containing all the boids
+   * @return Object | The cohesion force as a Victor vector
+   */
   cohesion( boids ) {
     var neighborDist = 50;
     var sum = new Victor();
@@ -127,6 +154,11 @@ class Boid {
     }
   }
 
+  /**
+   * Avoid the canvas walls if walls are enabled
+   *
+   * @return Object/boolean | The seek force to avoid a wall, or false if not near a wall
+   */
   avoidWalls() {
 
     if ( this.distanceFromHorWall() < this.radius * 20 || this.distanceFromVertWall() < this.radius * 20 ) {
@@ -135,6 +167,10 @@ class Boid {
 
   }
 
+  /**
+   * Run force calculation functions for the boid, then apply forces
+   *
+   */
   flock() {
 
     // Get Forces
@@ -161,7 +197,12 @@ class Boid {
 
   }
 
-  // Apply a force based on a coefficient
+  /**
+   * Apply a coefficient to a given force and apply it to the boid
+   *
+   * @param object | force | The Victor vector of the force to be applied
+   * @param float | coefficient | The factor to be applied to the force
+   */
   applyForce( force, coefficient ) {
     if ( ! coefficient ) { var coefficient = 1; }
     force.multiply({x:coefficient,y:coefficient});
@@ -169,10 +210,14 @@ class Boid {
     this.velocity.limitMagnitude( this.maxSpeed );
   }
 
+  /**
+   * Run the flock function and update the boid's position based on the resulting velocity
+   *
+   */
   nextPosition() {
 
     // Loop through behaviors to apply forces
-    this.flock();
+    // this.flock();
 
     // Update position
     this.position = this.position.add(this.velocity);
@@ -185,7 +230,10 @@ class Boid {
 
   }
 
-  // Check for wall bounces and border wrapping
+  /**
+   * Check for edge crossings and bounce the boid or wrap it to the other side of the canvas
+   *
+   */
   edgeCheck() {
     if (walls) {
       this.wallBounce();
@@ -194,7 +242,10 @@ class Boid {
     }
   }
 
-  // Check for agents passing borders and wrap to other side
+  /**
+   * If the boid passes a border with no walls, wrap the boid to the other side of the canvas
+   *
+   */
   borderWrap() {
     if (this.position.x < 0) {
       this.position.x = document.body.clientWidth;
@@ -208,7 +259,10 @@ class Boid {
     }
   }
 
-  // Detect a wall hit and bounce back if necessary
+  /**
+   * Detect a wall hit and bounce boid
+   *
+   */
   wallBounce() {
     if (this.position.x <= this.radius) {
       this.position.x = this.radius;
@@ -228,6 +282,11 @@ class Boid {
     }
   }
 
+  /**
+   * Calculate the distance from vertical wall in the direction of the boid's velocity
+   *
+   * @param float | the boid's distance from the wall
+   */
   distanceFromVertWall() {
     if (this.velocity.x > 0) {
       return document.body.clientWidth - ( this.position.x );
@@ -237,6 +296,11 @@ class Boid {
 
   }
 
+  /**
+   * Calculate the distance from horizontal wall in the direction of the boid's velocity
+   *
+   * @param float | the boid's distance from the wall
+   */
   distanceFromHorWall() {
     if (this.velocity.y > 0) {
       return document.body.clientHeight - ( this.position.y );
@@ -245,7 +309,10 @@ class Boid {
     }
   }
 
-  // Draw Boid to screen
+  /**
+   * Draw Boid to the canvas
+   *
+   */
   draw(){
     c.beginPath();
     c.arc(this.position.x, this.position.y, this.radius, 0, Math.PI * 2, false);
@@ -254,7 +321,10 @@ class Boid {
     c.closePath();
   }
 
-  // Update a boid's position and draw
+  /**
+   * Update a boid's position and call draw()
+   *
+   */
   update() {
 
     this.nextPosition();
@@ -262,7 +332,10 @@ class Boid {
 
   }
 
-  // Collision Detection
+  /**
+   * Detect collisions between boids and resolve
+   *
+   */
   detectCollision(){
 
     for (var i = 0; i < boids.length; i++) {
@@ -273,72 +346,69 @@ class Boid {
     }
   }
 
-  /**
+/**
  * Rotates coordinate system for velocities
- *
  * Takes velocities and alters them as if the coordinate system they're on was rotated
  *
- * @param  Object | velocity | The velocity of an individual particle
- * @param  Float  | angle    | The angle of collision between two objects in radians
- * @return Object | The altered x and y velocities after the coordinate system has been rotated
+ * @param  object | velocity | The velocity of an individual boid
+ * @param  float  | angle    | The angle of collision between two objects in radians
+ * @return object | The altered x and y velocities after the coordinate system has been rotated
  */
-
- rotate(velocity, angle) {
+  rotate(velocity, angle) {
     return {
         x: velocity.x * Math.cos(angle) - velocity.y * Math.sin(angle),
         y: velocity.x * Math.sin(angle) + velocity.y * Math.cos(angle)
     };
   }
 
-/**
- * Swaps out two colliding particles' x and y velocities after running through
- * an elastic collision reaction equation
- *
- * @param  Object | particle      | A particle object with x and y coordinates, plus velocity
- * @param  Object | otherParticle | A particle object with x and y coordinates, plus velocity
- * @return Null | Does not return a value
- */
- resolveCollision(particle, otherParticle) {
+  /**
+   * Swaps out two colliding boids' x and y velocities after running through
+   * an elastic collision reaction equation
+   *
+   * @param  Object | boid      | A boid object
+   * @param  Object | otherBoid | A boid object
+   */
+   resolveCollision(boid, otherBoid) {
 
-    var xVelocityDiff = particle.velocity.x - otherParticle.velocity.x;
-    var yVelocityDiff = particle.velocity.y - otherParticle.velocity.y;
+      var xVelocityDiff = boid.velocity.x - otherBoid.velocity.x;
+      var yVelocityDiff = boid.velocity.y - otherBoid.velocity.y;
 
-    var xDist = otherParticle.position.x - particle.position.x;
-    var yDist = otherParticle.position.y - particle.position.y;
+      var xDist = otherBoid.position.x - boid.position.x;
+      var yDist = otherBoid.position.y - boid.position.y;
 
-    // Prevent accidental overlap of particles
-    if ( xVelocityDiff * xDist + yVelocityDiff * yDist >= 0 ) {
+      // Prevent accidental overlap of boids
+      if ( xVelocityDiff * xDist + yVelocityDiff * yDist >= 0 ) {
 
-      // Grab angle between the two colliding particles
-      var angle = -Math.atan2(otherParticle.position.y - particle.position.y, otherParticle.position.x - particle.position.x);
+        // Grab angle between the two colliding boids
+        var angle = -Math.atan2(otherBoid.position.y - boid.position.y, otherBoid.position.x - boid.position.x);
 
-      // Store mass in var for better readability in collision equation
-      var m1 = particle.mass;
-      var m2 = otherParticle.mass;
+        // Store mass in var for better readability in collision equation
+        var m1 = boid.mass;
+        var m2 = otherBoid.mass;
 
-      // Velocity before equation
-      var u1 = this.rotate(particle.velocity, angle);
-      var u2 = this.rotate(otherParticle.velocity, angle);
+        // Velocity before equation
+        var u1 = this.rotate(boid.velocity, angle);
+        var u2 = this.rotate(otherBoid.velocity, angle);
 
-      // Velocity after 1d collision equation
-      var v1 = { x: u1.x * (m1 - m2) / (m1 + m2) + u2.x * 2 * m2 / (m1 + m2), y: u1.y };
-      var v2 = { x: u2.x * (m1 - m2) / (m1 + m2) + u1.x * 2 * m2 / (m1 + m2), y: u2.y };
+        // Velocity after 1d collision equation
+        var v1 = { x: u1.x * (m1 - m2) / (m1 + m2) + u2.x * 2 * m2 / (m1 + m2), y: u1.y };
+        var v2 = { x: u2.x * (m1 - m2) / (m1 + m2) + u1.x * 2 * m2 / (m1 + m2), y: u2.y };
 
-      // Final velocity after rotating axis back to original position
-      var vFinal1 = this.rotate(v1, -angle);
-      var vFinal2 = this.rotate(v2, -angle);
+        // Final velocity after rotating axis back to original position
+        var vFinal1 = this.rotate(v1, -angle);
+        var vFinal2 = this.rotate(v2, -angle);
 
-      // Swap particle velocities for realistic bounce effect
-      particle.velocity.x = vFinal1.x;
-      particle.velocity.y = vFinal1.y;
-      particle.velocity.limitMagnitude(particle.maxSpeed);
+        // Swap boid velocities for realistic bounce effect
+        boid.velocity.x = vFinal1.x;
+        boid.velocity.y = vFinal1.y;
+        boid.velocity.limitMagnitude(boid.maxSpeed);
 
-      otherParticle.velocity.x = vFinal2.x;
-      otherParticle.velocity.y = vFinal2.y;
-      otherParticle.velocity.limitMagnitude(otherParticle.maxSpeed);
+        otherBoid.velocity.x = vFinal2.x;
+        otherBoid.velocity.y = vFinal2.y;
+        otherBoid.velocity.limitMagnitude(otherBoid.maxSpeed);
+      }
+
     }
-
-  }
 
 
 }
