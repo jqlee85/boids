@@ -160,7 +160,6 @@ if ( numBoids > maxBoids ) {
 } else if ( numBoids < minBoids ) {
   numBoids = minBoids;
 }
-numBoids = 10;
 var radius;
 if ( size.width / 288 > 5 ) {
   radius = 5;

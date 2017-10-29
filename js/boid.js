@@ -217,12 +217,12 @@ class Boid {
   nextPosition() {
 
     // Loop through behaviors to apply forces
-    // this.flock();
+    this.flock();
 
     // Update position
     this.position = this.position.add(this.velocity);
 
-    // Stricter collision detection if enabled
+    // Collision detection if enabled
     if ( collisions ) { this.detectCollision(); }
 
     // Check edges for walls or overruns
@@ -409,6 +409,5 @@ class Boid {
       }
 
     }
-
 
 }
