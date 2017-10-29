@@ -2,6 +2,6 @@
 Implementation of Boids on JS Canvas
 
 ## To Do
-Test Mobile Inputs
+Fix Mobile Inputs
 
 Make Wall Avoidance More Fluid

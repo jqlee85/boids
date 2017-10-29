@@ -309,6 +309,7 @@ input::-moz-focus-inner {
     bottom: 0px;
   }
   .boids-control.show {
+    height: auto;
     max-height: 80px;
     padding: 20px 0;
   }
@@ -318,9 +319,12 @@ input::-moz-focus-inner {
   #mobile-boids-controls {
     display: block;
   }
-  #fps {
+  #fps, #jumpoff-link {
     font-size: 10px;
     padding: 3px;
+  }
+  #jumpoff-link a {
+    font-size: 10px;
   }
 }
 @media screen and (min-width: 1001px) {

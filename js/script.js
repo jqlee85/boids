@@ -24,6 +24,9 @@ if(browser.indexOf('firefox') > -1) {
   var firefox = true;
 }
 
+// Detect Mobile
+var mobile = ( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) ? true : false;
+
 // Set Size
 var size = {
   width: window.innerWidth || document.body.clientWidth,
@@ -139,6 +142,33 @@ var walls = true;
 var mouseSeek = false;
 var collisions = false;
 
+// Set number of boids based on browser and screen size
+if (firefox) {
+  var maxBoids = 250;
+} else if (mobile) {
+  var maxBoids = 150;
+} else {
+  var maxBoids = 500;
+}
+var minBoids = 250;
+var numBoids = Math.sqrt(canvas.width * canvas.height) / 2;
+if ( numBoids > maxBoids ) {
+  numBoids = maxBoids;
+} else if ( numBoids < minBoids ) {
+  numBoids = minBoids;
+}
+
+// Set possible radii  based on screen size
+var radius;
+if ( size.width / 288 > 5 ) {
+  radius = 5;
+} else if ( size.width / 288 < 3) {
+  radius = 3;
+} else {
+  radius = size.width / 288;
+}
+var radiusCoefficients = [.5,.6,.7,.8,1];
+
 // Boid Attributes
 var colors = [
   '#4286f4',
@@ -151,24 +181,6 @@ var colors = [
   '#42ebf4'
 ];
 var diversity = 8;
-if (firefox) maxBoids = 250;
-else maxBoids = 500;
-var minBoids = 250;
-var numBoids = Math.sqrt(canvas.width * canvas.height) / 2;
-if ( numBoids > maxBoids ) {
-  numBoids = maxBoids;
-} else if ( numBoids < minBoids ) {
-  numBoids = minBoids;
-}
-var radius;
-if ( size.width / 288 > 5 ) {
-  radius = 5;
-} else if ( size.width / 288 < 3) {
-  radius = 3;
-} else {
-  radius = size.width / 288;
-}
-var radiusCoefficients = [.5,.6,.7,.8,1];
 var quickness = 1;
 var introversion = .5;
 var racism = 0;

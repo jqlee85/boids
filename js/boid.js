@@ -161,7 +161,9 @@ class Boid {
    */
   avoidWalls() {
 
-    if ( this.distanceFromHorWall() < this.radius * 20 || this.distanceFromVertWall() < this.radius * 20 ) {
+    var buffer = mobile ? 5 : 15;
+
+    if ( this.distanceFromHorWall() < this.radius * buffer || this.distanceFromVertWall() < this.radius * buffer ) {
       return this.seek(center);
     } else { return false; }
 
