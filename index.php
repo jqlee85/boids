@@ -80,7 +80,7 @@
 				<p><span id="fps-number"></span> fps</p>
 			</div>
 			<div id="jumpoff-link">
-				<a href="https://jumpoff.io">HOME</a>
+				<a href="https://jumpoff.io">JumpOff.io</a>
 			</div>
 		</div>
 	</div>
