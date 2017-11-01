@@ -34,8 +34,8 @@ class Boid {
   /**
    * Calculate the seek force for a boid and a target
    *
-   * @param  Object | target | The Victor.js vector for a target's position
-   * @return Object | The seek force for the target as a vector
+   * @param  object | target | The Victor.js vector for a target's position
+   * @return object | The seek force for the target as a vector
    */
   seek( target ){
     var targetposition = target.clone();
@@ -66,8 +66,8 @@ class Boid {
   /**
    * Calculate the separation force for a boid and its flock
    *
-   * @param  Array | boids | The boids array containing all the boids
-   * @return Object | The Separation force as a Victor vector
+   * @param  array | boids | The boids array containing all the boids
+   * @return object | The Separation force as a Victor vector
    */
   separate( boids ){
     var sum = new Victor();
@@ -102,8 +102,8 @@ class Boid {
   /**
    * Calculate the alignment force for a boid and its flock
    *
-   * @param  Array | boids | The boids array containing all the boids
-   * @return Object | The alignment force as a Victor vector
+   * @param  array | boids | The boids array containing all the boids
+   * @return object | The alignment force as a Victor vector
    */
   align( boids ) {
     var neighborDist = 50;
@@ -132,8 +132,8 @@ class Boid {
   /**
    * Calculate the cohesion force for a boid and its flock
    *
-   * @param  Array | boids | The boids array containing all the boids
-   * @return Object | The cohesion force as a Victor vector
+   * @param  array | boids | The boids array containing all the boids
+   * @return object | The cohesion force as a Victor vector
    */
   cohesion( boids ) {
     var neighborDist = 50;
@@ -157,7 +157,7 @@ class Boid {
   /**
    * Avoid the canvas walls if walls are enabled
    *
-   * @return Object/boolean | The seek force to avoid a wall, or false if not near a wall
+   * @return object/boolean | The seek force to avoid a wall, or false if not near a wall
    */
   avoidWalls() {
 
@@ -367,8 +367,8 @@ class Boid {
    * Swaps out two colliding boids' x and y velocities after running through
    * an elastic collision reaction equation
    *
-   * @param  Object | boid      | A boid object
-   * @param  Object | otherBoid | A boid object
+   * @param  object | boid      | A boid object
+   * @param  object | otherBoid | A boid object
    */
    resolveCollision(boid, otherBoid) {
 

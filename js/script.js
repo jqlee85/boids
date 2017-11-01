@@ -250,7 +250,7 @@ function createBoids() {
  *
  */
 function animate() {
-	requestAnimationFrame(animate);
+  requestAnimationFrame(animate);
 
   // Calc elapsed time since last loop
   now = Date.now();
@@ -309,8 +309,8 @@ startAnimating(60);
  *
  */
 addEventListener('mousemove', function(event){
-	mouse.position.x = event.clientX;
-	mouse.position.y = event.clientY;
+  mouse.position.x = event.clientX;
+  mouse.position.y = event.clientY;
 });
 
 /**
@@ -321,20 +321,30 @@ addEventListener('resize', function(){
   size.width = innerWidth;
   size.height = innerHeight;
   canvas.width = innerWidth;
-	canvas.height = innerHeight;
+  canvas.height = innerHeight;
   center.x = size.width/ 2;
   center.y = size.height / 2;
+  if ( innerWidth >= 1000 && ! mobile ) {
+    document.getElementById('mobile-boids-controls').style.display = 'none';
+  } else {
+    document.getElementById('mobile-boids-controls').style.display = 'block';
+  }
 });
 
 /*---- end Event Listeners ----*/
 
 /*---- Inputs ----*/
 
+// Hide Elements on Mobile
+document.getElementById('collisions-mobile').style.display = 'none';
+document.getElementById('mouse-seek-mobile').style.display = 'none';
+
 // Mobile Closers
 var mobileClosers = document.getElementsByClassName('boids-control-close');
 for (var i = 0; i < mobileClosers.length; i++) {
   mobileClosers[i].onclick = function() {
     this.parentNode.classList.toggle('show');
+    document.getElementById('mobile-boids-controls').style.display = 'block';
   }
 }
 
@@ -443,6 +453,7 @@ introversionInput.onchange = function() {
 }
 var introversionMobile = document.getElementById('introversion-mobile');
 introversionMobile.onclick = function() {
+  document.getElementById('mobile-boids-controls').style.display = 'none';
   introversionControlContainer.classList.toggle('show');
 }
 function updateIntroversion(value) {
@@ -460,6 +471,7 @@ speedInput.onchange = function() {
 }
 var speedMobile = document.getElementById('speed-mobile');
 speedMobile.onclick = function() {
+  document.getElementById('mobile-boids-controls').style.display = 'none';
   speedControlContainer.classList.toggle('show');
 }
 function updateQuickness(value) {
@@ -478,6 +490,7 @@ racismInput.onchange = function() {
 }
 var racismMobile = document.getElementById('racism-mobile');
 racismMobile.onclick = function() {
+  document.getElementById('mobile-boids-controls').style.display = 'none';
   racismControlContainer.classList.toggle('show');
 }
 function updateRacism(value) {
@@ -495,6 +508,7 @@ diversityInput.onchange = function() {
 }
 var diversityMobile = document.getElementById('diversity-mobile');
 diversityMobile.onclick = function() {
+  document.getElementById('mobile-boids-controls').style.display = 'none';
   diversityControlContainer.classList.toggle('show');
 }
 function updateDiversity(value) {
