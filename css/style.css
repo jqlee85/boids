@@ -274,6 +274,41 @@ input::-moz-focus-inner {
   color: rgba(255,255,255,.8);
   cursor: pointer;
 }
+.boids-control-close:hover::before, .boids-control-close:hover::after {
+  background: #1ebcc5;
+}
+.boids-control-close::before, .boids-control-close::after {
+  content: '';
+  position: absolute;
+  height: 2px;
+  width: 100%;
+  top: 50%;
+  left: 0;
+  margin-top: -1px;
+  background: #fafafa;
+  background: rgba(255,255,255,.8);
+}
+.boids-control-close::before {
+  -webkit-transform: rotate(45deg);
+  -moz-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  -o-transform: rotate(45deg);
+  transform: rotate(45deg);
+}
+.boids-control-close::after {
+  -webkit-transform: rotate(-45deg);
+  -moz-transform: rotate(-45deg);
+  -ms-transform: rotate(-45deg);
+  -o-transform: rotate(-45deg);
+  transform: rotate(-45deg);
+}
+.boids-control-close.big {
+  -webkit-transform: scale(3);
+  -moz-transform: scale(3);
+  -ms-transform: scale(3);
+  -o-transform: scale(3);
+  transform: scale(3);
+}
 #jumpoff-link {
   position: absolute;
   display: inline;
